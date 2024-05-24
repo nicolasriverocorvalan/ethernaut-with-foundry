@@ -30,7 +30,7 @@ The attack function in the `CoinFlipAttack.sol` contract calls the predict funct
 
 By calling the attack function multiple times, you can win the coin flip in the `CoinFlip.sol` contract multiple times in a row.
 
-1. Deploy `CoinFlipAttack.sol` using the cast deploy command.
+1. Deploy `CoinFlipAttack.sol`.
 
 ```bash
 forge script script/DeployCoinFlipAttack.s.sol --rpc-url $ALCHEMY_RPC_URL --private-key $PRIVATE_KEY --broadcast --verify --etherscan-api-key $ETHERSCAN_API_KEY -vvvv --legacy

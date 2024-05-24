@@ -26,12 +26,12 @@ The `contribute` function requires that the value of Ether sent is less than 0.0
 ```bash
 1. await contract.address
 2. # await contract.owner()
-   cast call $CONTRACT_ADDRESS "owner()" --rpc-url $ALCHEMY_RPC_URL
-3. cast send $CONTRACT_ADDRESS "contribute()" --value 0.000000000000000001ether --private-key $PRIVATE_KEY --rpc-url $ALCHEMY_RPC_URL
-4. cast call $CONTRACT_ADDRESS "getContribution()" --rpc-url $ALCHEMY_RPC_URL --from $ACCOUNT_ADDRESS
+   cast call $CONTRACT_ADDRESS "owner()" --rpc-url $ALCHEMY_RPC_URL --legacy
+3. cast send $CONTRACT_ADDRESS "contribute()" --value 0.000000000000000001ether --private-key $PRIVATE_KEY --rpc-url $ALCHEMY_RPC_URL --legacy
+4. cast call $CONTRACT_ADDRESS "getContribution()" --rpc-url $ALCHEMY_RPC_URL --from $ACCOUNT_ADDRESS --legacy
 5. # {value: msg.value}("")
-   cast send $CONTRACT_ADDRESS --value 0.000000000000000001ether --private-key $PRIVATE_KEY --rpc-url $ALCHEMY_RPC_URL
-6. cast send $CONTRACT_ADDRESS "withdraw()" --private-key $PRIVATE_KEY --rpc-url $ALCHEMY_RPC_URL
+   cast send $CONTRACT_ADDRESS --value 0.000000000000000001ether --private-key $PRIVATE_KEY --rpc-url $ALCHEMY_RPC_URL --legacy
+6. cast send $CONTRACT_ADDRESS "withdraw()" --private-key $PRIVATE_KEY --rpc-url $ALCHEMY_RPC_URL --legacy
 ```
 
 ## Fix

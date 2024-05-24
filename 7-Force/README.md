@@ -17,7 +17,7 @@ The `Force` contract doesn't have any functions. So, the only way to increase it
 
 ## Found
 
-1. Deploy `TelephoneAttack.sol` using the cast deploy command.
+1. Deploy `TelephoneAttack.sol`.
 
 ```bash
 forge script script/DeployFoundForce.s.sol --rpc-url $ALCHEMY_RPC_URL --private-key $PRIVATE_KEY --broadcast --verify --etherscan-api-key $ETHERSCAN_API_KEY -vvvv --legacy

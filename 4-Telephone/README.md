@@ -34,7 +34,7 @@ The condition `tx.origin != msg.sender` is true when the function is called by a
 
 ### Foundry
 
-1. Deploy `TelephoneAttack.sol` using the cast deploy command.
+1. Deploy `TelephoneAttack.sol`.
 
 ```bash
 forge script script/DeployTelephoneAttack.s.sol --rpc-url $ALCHEMY_RPC_URL --private-key $PRIVATE_KEY --broadcast --verify --etherscan-api-key $ETHERSCAN_API_KEY -vvvv --legacy

@@ -1,66 +1,26 @@
-## Foundry
+# Re-entrancy
 
-**Foundry is a blazing fast, portable and modular toolkit for Ethereum application development written in Rust.**
+Steal all the funds from the contract.
 
-Foundry consists of:
+## Vulnerability
 
--   **Forge**: Ethereum testing framework (like Truffle, Hardhat and DappTools).
--   **Cast**: Swiss army knife for interacting with EVM smart contracts, sending transactions and getting chain data.
--   **Anvil**: Local Ethereum node, akin to Ganache, Hardhat Network.
--   **Chisel**: Fast, utilitarian, and verbose solidity REPL.
+The contract is vulnerable to a reentrancy attack due to the way the withdraw function is implemented.
 
-## Documentation
+In the `withdraw` function, you send Ether to `msg.sender` and then subtract the withdrawn amount from `balances[msg.sender]`. This allows for a reentrancy attack, where the fallback function of the attacker's contract calls `withdraw` again before the first call to `withdraw` has finished. This can drain the contract's Ether.
 
-https://book.getfoundry.sh/
+## Attack
 
-## Usage
+### Fix
 
-### Build
+The balance must be subtracted before the Ether is sent. This prevents a reentrant call from withdraw being able to withdraw more Ether than the caller is entitled to.
 
-```shell
-$ forge build
-```
+```bash
+function withdraw(uint256 _amount) public {
+    require(balances[msg.sender] >= _amount, "Insufficient balance");
 
-### Test
+    balances[msg.sender] = balances[msg.sender].sub(_amount);
 
-```shell
-$ forge test
-```
-
-### Format
-
-```shell
-$ forge fmt
-```
-
-### Gas Snapshots
-
-```shell
-$ forge snapshot
-```
-
-### Anvil
-
-```shell
-$ anvil
-```
-
-### Deploy
-
-```shell
-$ forge script script/Counter.s.sol:CounterScript --rpc-url <your_rpc_url> --private-key <your_private_key>
-```
-
-### Cast
-
-```shell
-$ cast <subcommand>
-```
-
-### Help
-
-```shell
-$ forge --help
-$ anvil --help
-$ cast --help
+    (bool result,) = msg.sender.call{value: _amount}("");
+    require(result, "Transfer failed");
+}
 ```

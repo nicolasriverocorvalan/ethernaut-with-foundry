@@ -2,9 +2,9 @@
 
 pragma solidity ^0.6.12;
 
-import "@openzeppelin/contracts/utils/math/SafeMath.sol";
+import "@openzeppelin/contracts/math/SafeMath.sol";
 
-contract Reentrance {
+contract Reentrancy {
     using SafeMath for uint256;
 
     mapping(address => uint256) public balances;

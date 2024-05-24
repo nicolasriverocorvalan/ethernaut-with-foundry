@@ -3,12 +3,6 @@ src = "src"
 out = "out"
 libs = ["lib"]
 
-#remappings = ["@openzeppelin/contracts/=lib/openzeppelin-contracts/contracts"]
-
+remappings = ["@openzeppelin/contracts/=lib/openzeppelin-contracts/contracts"]
 
 # See more config options https://github.com/foundry-rs/foundry/blob/master/crates/config/README.md#all-options
-
-
-#install :; forge install cyfrin/foundry-devops@0.0.11 --no-commit && forge install smartcontractkit/chainlink-brownie-contracts@0.6.1 --no-commit && forge install foundry-rs/forge-std@v1.5.3 --no-commit
-
-#import "@openzeppelin/contracts/utils/math/SafeMath.sol";

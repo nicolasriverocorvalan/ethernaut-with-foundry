@@ -4,27 +4,42 @@ Make it past the gatekeeper and register as an entrant to pass this level.
 
 ## Vulnerability
 
-a. `gateOne` modifier checks if `msg.sender` is not equal to `tx.origin`. Here's what this means:
+### `gateOne` 
+
+Modifier checks if `msg.sender` is not equal to `tx.origin`.
 
 1. `msg.sender` is a special global variable in Solidity that contains the address of the caller of the current function. If a contract function is called by another contract, `msg.sender` will be the address of that contract.
 
 2. `tx.origin` is another special global variable in Solidity that contains the address of the original sender of the transaction. This is the `address of the externally owned account (EOA)` that initiated the transaction. If a contract function is called by another contract, `tx.origin` will still be the address of the EOA, not the contract.
 
-b. `gateTwo` modifier checks if the remaining gas at the point of execution is a multiple of 8191. Here's what this means:
+### `gateTwo` 
 
-1. `gasleft()` is a built-in function in Solidity that returns the amount of gas still available for computation in the current function call.
+### `gateThree`
 
-2. The `%` operator is the modulus operator in Solidity. It returns the remainder of the division of the number on the left by the number on the right. So, `gasleft() % 8191` returns the remainder of the division of the remaining gas by 8191.
+1. `require(uint32(uint64(_gateKey)) == uint16(uint64(_gateKey)))`: This condition checks if the last 4 bytes (represented by uint32) of the `_gateKey` are equal to the last 2 bytes (represented by uint16) of the `_gateKey`. This is equivalent to masking the `_gateKey` with `0x0000FFFF`.
 
-c. The `gateThree` modifier takes a `bytes8` argument `_gateKey` and checks three conditions using the `require` function. If any of these conditions are not met, the function call will fail and an error message will be returned.
+2. `require(uint32(uint64(_gateKey)) != uint64(_gateKey))`: This condition checks if the last 4 bytes of the `_gateKey` are different from the full 8 bytes of the `_gateKey`. This means that the first 4 bytes of the `_gateKey` must not be zero, which is equivalent to masking the `_gateKey` with `0xFFFF0000FFFF`.
 
-1. `require(uint32(uint64(_gateKey)) == uint16(uint64(_gateKey)), "GatekeeperOne: invalid gateThree part one");`: This line checks if the last 16 bits of `_gateKey` are equal to the last 32 bits. This is done by first converting `_gateKey` to a uint64, then taking the last 32 bits (with uint32) and the last 16 bits (with uint16), and comparing them.
+3. `require(uint32(uint64(_gateKey)) == uint16(uint160(tx.origin)))`: This condition checks if the last 4 bytes of the `_gateKey` are equal to the last 2 bytes of the `tx.origin` (the original sender of the transaction). This is equivalent to masking the `_gateKey` with `0x0000FFFF`.
 
-2. `require(uint32(uint64(_gateKey)) != uint64(_gateKey), "GatekeeperOne: invalid gateThree part two");`: This line checks if the last 32 bits of _gateKey are not equal to the full _gateKey. This is done by converting `_gateKey` to a uint64, taking the last 32 bits (with uint32), and comparing it to the full `_gateKey`.
+We can conclude that the key is masked with `0xFFFFFFFF0000FFFF`. This mask ensures that the first 4 bytes are not zero (due to the second condition), the last 4 bytes are equal to the last 2 bytes (due to the first and third conditions), and the middle 2 bytes can be any value.
 
-3. `require(uint32(uint64(_gateKey)) == uint16(uint160(tx.origin)), "GatekeeperOne: invalid gateThree part three");`: This line checks if the last 32 bits of `_gateKey` are equal to the last 16 bits of the transaction origin (`tx.origin`). This is done by converting `_gateKey` and `tx.origin` to uint64 and uint160 respectively, taking the last 32 bits of `_gateKey` and the last 16 bits of `tx.origin`, and comparing them.
 
 ## Attack
+
+1. Deploy `GatekeeperOneAttack.sol`
+
+```bash
+forge script script/DeployGatekeeperOneAttack.s.sol --rpc-url $ALCHEMY_RPC_URL --private-key $PRIVATE_KEY --broadcast --verify --etherscan-api-key $ETHERSCAN_API_KEY -vvvv --legacy
+
+# make deploy ARGS="--network sepolia"
+# https://sepolia.etherscan.io/address/0x9e05EbC2fbFE3f73738aDBA0E04194dBd285c947
+```
+2. Attack
+
+```bash
+cast send $CONTRACT_ADDRESS "attack()" --private-key $PRIVATE_KEY --rpc-url $ALCHEMY_RPC_URL --legacy
+```
 
 ## Fix
 

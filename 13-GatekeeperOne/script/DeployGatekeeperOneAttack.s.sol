@@ -6,7 +6,7 @@ import {Script} from "forge-std/Script.sol";
 import {GatekeeperOneAttack} from "../src/GatekeeperOneAttack.sol";
 
 contract DeployGatekeeperOneAttack is Script {
-    address private constant GATEKEEEPER_ONE_ADDRESS = 0xFC8349BDb34b934F0F5bDC2938AEB2236F5e64D1; //Gatekeeper One contract to attack
+    address private constant GATEKEEEPER_ONE_ADDRESS = 0x4fB22C2e1b79c9bDCfd828C8A59476C673EA9869; //Gatekeeper One contract to attack
 
     function run() external returns (GatekeeperOneAttack) {
         vm.startBroadcast();

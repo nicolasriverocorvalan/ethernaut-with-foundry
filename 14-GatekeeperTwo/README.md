@@ -27,7 +27,7 @@ This is because during the execution of the constructor, the contract is not yet
 
 This is a condition in the code that must be met for the function to continue execution. It's checking that the XOR of the 64-bit integer representation of the first 8 bytes of the `Keccak-256` hash of the sender's address and `_gateKey` is equal to the maximum possible `uint64` value.
 
-`bytes8 myKey = bytes8(uint64(bytes8(keccak256(abi.encodePacked(address(this))))) ^ (uint64(0) - 1));`
+`bytes8 Key = bytes8(uint64(bytes8(keccak256(abi.encodePacked(address(this))))) ^ (uint64(0) - 1));`
 
 This is the XOR of the 64-bit integer representation of the first 8 bytes of the `Keccak-256` hash of the contract's own address and the maximum possible `uint64` value. This value is calculated in such a way that, when it's used as `_gateKey` in the require statement, and the `msg.sender` is the contract's own address, the require statement will pass.
 
@@ -39,21 +39,15 @@ This is the XOR of the 64-bit integer representation of the first 8 bytes of the
 
 This results in a `bytes8` value that, when XORed with the `uint64` representation of the first `8` bytes of the `Keccak-256` hash of the sender's address, should equal `type(uint64).max`, as required by the require statement.
 
-So if `myKey` is used as `_gateKey` in the require statement, and the `msg.sender` is the contract's own address, the require statement should pass.
+So if `Key` is used as `_gateKey` in the require statement, and the `msg.sender` is the contract's own address, the require statement should pass.
 
-1. Deploy `GatekeeperTwoAttack.sol`
+1. Deploy `GatekeeperTwoAttack.sol` and Attack.
 
 ```bash
 forge script script/DeployGatekeeperTwoAttack.s.sol --rpc-url $ALCHEMY_RPC_URL --private-key $PRIVATE_KEY --broadcast --verify --etherscan-api-key $ETHERSCAN_API_KEY -vvvv --legacy
 
 # make deploy ARGS="--network sepolia"
-# https://sepolia.etherscan.io/address/0x28C9aC7380DdF1a38b1fc09BBD1F49b3EE0b48eB
-
-2. Attack
-
-```bash
-cast send $CONTRACT_ADDRESS "attack()" --private-key $PRIVATE_KEY --rpc-url $ALCHEMY_RPC_URL --legacy
-```
+# https://sepolia.etherscan.io/address/0xE142D54936f018291F3973038b5f4b4743bcC9c0
 
 ## Fix
 

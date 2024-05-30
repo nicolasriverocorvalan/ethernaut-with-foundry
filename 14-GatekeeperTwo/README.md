@@ -23,11 +23,11 @@ This is because during the execution of the constructor, the contract is not yet
 
 `A XOR B = C` is equal to `A XOR C = B`
 
-`require(uint64(bytes8(keccak256(abi.encodePacked(msg.sender)))) ^ uint64(_gateKey) == uint64(0) - 1);`, 
+`require(uint64(bytes8(keccak256(abi.encodePacked(msg.sender)))) ^ uint64(_gateKey) == uint64(0) - 1);`,
 
 This is a condition in the code that must be met for the function to continue execution. It's checking that the XOR of the 64-bit integer representation of the first 8 bytes of the `Keccak-256` hash of the sender's address and `_gateKey` is equal to the maximum possible `uint64` value.
 
-`bytes8 Key = bytes8(uint64(bytes8(keccak256(abi.encodePacked(address(this))))) ^ (uint64(0) - 1));`
+`bytes8 key = bytes8(uint64(bytes8(keccak256(abi.encodePacked(address(this))))) ^ ~uint64(0));`
 
 This is the XOR of the 64-bit integer representation of the first 8 bytes of the `Keccak-256` hash of the contract's own address and the maximum possible `uint64` value. This value is calculated in such a way that, when it's used as `_gateKey` in the require statement, and the `msg.sender` is the contract's own address, the require statement will pass.
 

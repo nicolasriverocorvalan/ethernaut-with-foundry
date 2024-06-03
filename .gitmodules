@@ -1,21 +1,3 @@
-[submodule "9-King/lib/forge-std"]
-	path = 9-King/lib/forge-std
-	url = https://github.com/foundry-rs/forge-std
-[submodule "10-Re-entrancy/lib/forge-std"]
-	path = 10-Re-entrancy/lib/forge-std
-	url = https://github.com/foundry-rs/forge-std
-[submodule "10-Re-entrancy/lib/openzeppelin-contracts"]
-	path = 10-Re-entrancy/lib/openzeppelin-contracts
+[submodule "15-NaughtCoin/lib/openzeppelin-contracts"]
+	path = 15-NaughtCoin/lib/openzeppelin-contracts
 	url = https://github.com/OpenZeppelin/openzeppelin-contracts
-[submodule "11-Elevator/lib/forge-std"]
-	path = 11-Elevator/lib/forge-std
-	url = https://github.com/foundry-rs/forge-std
-[submodule "12-Privacy/lib/forge-std"]
-	path = 12-Privacy/lib/forge-std
-	url = https://github.com/foundry-rs/forge-std
-[submodule "13-GatekeeperOne/lib/forge-std"]
-	path = 13-GatekeeperOne/lib/forge-std
-	url = https://github.com/foundry-rs/forge-std
-[submodule "14-GatekeeperTwo/lib/forge-std"]
-	path = 14-GatekeeperTwo/lib/forge-std
-	url = https://github.com/foundry-rs/forge-std

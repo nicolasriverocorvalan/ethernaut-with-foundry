@@ -1,0 +1,3 @@
+[submodule "15-NaughtCoin/lib/openzeppelin-contracts"]
+	path = 15-NaughtCoin/lib/openzeppelin-contracts
+	url = https://github.com/OpenZeppelin/openzeppelin-contracts

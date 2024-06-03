@@ -6,7 +6,7 @@ import {Script} from "forge-std/Script.sol";
 import {NaughtCoinAttack} from "../src/NaughtCoinAttack.sol";
 
 contract DeployNaughtCoinAttack is Script {
-    address private constant NAUGHTCOIN_ADDRESS = 0xfAa0972485478799744bbaAE96e77fA63d95864A; // Naught Coin contract to attack
+    address private constant NAUGHTCOIN_ADDRESS = 0x6A873bb8B8500eD9Da7Ad72Cd5dF77b137866c34; // Naught Coin contract to attack
 
     function run() external returns (NaughtCoinAttack) {
         vm.startBroadcast();

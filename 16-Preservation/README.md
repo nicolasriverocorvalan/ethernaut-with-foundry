@@ -62,3 +62,15 @@ cast send $CONTRACT_ADDRESS "attack()" --private-key $PRIVATE_KEY --rpc-url $ALC
 This attack is possible because the `Preservation` contract uses `delegatecall` without properly validating the addresses it's calling.
 
 To fix this vulnerability, you could use the `call` function instead of `delegatecall`, and move the `storedTime` variable to the library contracts. This way, the library contracts can't modify the storage of the `Preservation` contract. This would require a significant redesign of the contract.
+
+## Notes
+
+`abi.encodePacked` is a function in Solidity that takes one or more arguments, and returns a tightly packed concatenation of the binary representations of those arguments.
+
+`timeZone1Library.delegatecall(abi.encodePacked(setTimeSignature, _timeStamp));`
+
+`abi.encodePacked(setTimeSignature, _timeStamp)` is creating a tightly packed binary representation of the `setTimeSignature` and `_timeStamp` variables.
+
+This encoded data is then passed as the data payload to the `delegatecall` function. The `delegatecall` function will execute the function specified by `setTimeSignature` in the `timeZone1Library` contract, with `_timeStamp` as the argument.
+
+The reason for using `abi.encodePacked` here is to create the correct data payload for the `delegatecall` function. The `delegatecall` function requires `the function signature` and `arguments` to be passed as a single bytes array, and `abi.encodePacked` provides a convenient way to create this array.

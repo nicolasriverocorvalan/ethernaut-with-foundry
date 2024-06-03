@@ -27,4 +27,3 @@ contract PreservationAttack {
         owner = address(uint160(_owner));
     }
 }
-

@@ -6,7 +6,7 @@ import {Script} from "forge-std/Script.sol";
 import {PreservationAttack} from "../src/PreservationAttack.sol";
 
 contract DeployPreservationAttack is Script {
-    address private constant PRESERVATION_ADDRESS = 0xc710338Eaf1765Fcc8944f9792dFc286a47a47FA; // Preservation contract to attack
+    address private constant PRESERVATION_ADDRESS = 0x5E1429084cdf0446d575b1DE68C649Bc8aA7Bd26; // Preservation contract to attack
 
     function run() external returns (PreservationAttack) {
         vm.startBroadcast();

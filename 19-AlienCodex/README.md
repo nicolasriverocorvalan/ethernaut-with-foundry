@@ -8,6 +8,20 @@ You've uncovered an Alien contract. Claim ownership to complete the level.
 
 In Ethereum smart contracts, storage is a key-value store that maps 256-bit words to 256-bit words. The first state variable that you declare in a contract is stored in slot 0, the second one in slot 1, and so on.
 
+* `Slot 0`: The `contact` and `_owner` variables are both stored in `slot 0`. This is because `contact` is a `bool` which only takes up 1 byte, and `_owner` is an `address` which takes up 20 bytes. Together, they only take up 21 bytes, which is less than the 32 bytes available in a storage slot, so they can both fit in the same slot.
+
+* `Slot 1`: The `codex.length` variable is stored in slot 1. This variable keeps track of the number of elements in the `codex` array.
+
+* `Slots keccak256(1), keccak256(2) + 1, etc`: These slots are used to store the elements of the codex array. The `keccak256` function is used to calculate the storage slot for each element based on its index in the array.
+
+* `Slot 2^256 - 1`: This slot is used to store the element at index `2^256 - 1 - uint(keccak256(1))` in the `codex` array. This is the result of an underflow, where subtracting 1 from 0 results in the maximum uint value.
+
+* `Slot 0 (again)`: This slot is used to store the element at `index 2^256 - 1 - uint(keccak256(1)) + 1` in the `codex` array. This is also the result of an underflow, where adding 1 to the maximum `uint` value results in 0.
+
+```bash
+uint index = ((2 ** 256) - 1) - uint(keccak256(abi.encode(1))) + 1;
+```
+
 In the `AlienCodex` contract, the `owner` variable is inherited from the `Ownable` contract and is therefore not the first state variable declared. This means it's not stored in slot 0, but in a later slot.
 
 1. `make_contact()` Function
@@ -18,26 +32,6 @@ Call the `retract()` function. This will decrease the `codex.length` by 1. When 
 
 3. `revise()` Function
 Call the `revise()` function to access the array at slot 0 and update the `owner`'s value with our own address.
-
-### Codex array index breakdown
-
-```bash
-uint index = ((2 ** 256) - 1) - uint(keccak256(abi.encode(1))) + 1;
-```
-
-1. `2 ** 256` calculates 2 to the power of 256. This is the maximum value a 256-bit unsigned integer (`uint`) can hold in Solidity.
-
-2. `(2 ** 256) - 1` subtracts one from the maximum `uint` value. This results in a `uint` with all bits set to 1, which is the maximum possible value for a `uint` in Solidity.
-
-3. `abi.encode(1)` encodes the number 1 as per the Ethereum ABI specification. This is used as input to the `keccak256` function.
-
-4. `keccak256(abi.encode(1))` computes the Keccak-256 hash of the encoded number 1. This results in a 32-byte hash, which is then converted to a `uint`.
-
-5. `((2 ** 256) - 1) - uint(keccak256(abi.encode(1)))` subtracts the `uint` value of the hash from the maximum `uint` value. This is used to create a pseudo-random number, in this context, it's used to calculate the storage slot of the `owner` variable.
-
-6. `((2 ** 256) - 1) - uint(keccak256(abi.encode(1))) + 1` finally, it adds 1 to the result. The purpose of this is to ensure that the result is never zero, because storage `slot 0` is reserved for the `contact` variable.
-
-So, the index variable will hold the storage slot of the `owner` variable. This is used in the `revise()` function to overwrite the `owner` variable with the address of the attacker, effectively transferring ownership of the contract to the attacker.
 
 ```bash
 function revise(uint256 i, bytes32 _content) public contacted {
@@ -53,6 +47,13 @@ bytes32 myAddress = bytes32(uint256(uint160(tx.origin)));
 
 ## Attack
 
-Let's use Remix IDE to avoid compatibility (downgrade) issues with Foundry.
+Let's deploy `AlienCodexAttack` using Remix IDE to avoid compatibility (Foundry downgrade) issues.
 
 ## Fix
+
+```bash
+function retract() public contacted {
+    require(codex.length > 0, "No entries to retract");
+    codex.length--;
+}
+```

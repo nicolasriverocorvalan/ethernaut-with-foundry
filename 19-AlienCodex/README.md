@@ -39,6 +39,18 @@ uint index = ((2 ** 256) - 1) - uint(keccak256(abi.encode(1))) + 1;
 
 So, the index variable will hold the storage slot of the `owner` variable. This is used in the `revise()` function to overwrite the `owner` variable with the address of the attacker, effectively transferring ownership of the contract to the attacker.
 
+```bash
+function revise(uint256 i, bytes32 _content) public contacted {
+    codex[i] = _content;
+}
+```
+
+The `_content` is of type `bytes32` which means we need to convert our address to bytes32.
+
+```bash
+bytes32 myAddress = bytes32(uint256(uint160(tx.origin)));
+```
+
 ## Attack
 
 Let's use Remix IDE to avoid compatibility (downgrade) issues with Foundry.

@@ -7,3 +7,6 @@
 [submodule "17-Recovery/lib/forge-std"]
 	path = 17-Recovery/lib/forge-std
 	url = https://github.com/foundry-rs/forge-std
+[submodule "18-MagicNumber/lib/forge-std"]
+	path = 18-MagicNumber/lib/forge-std
+	url = https://github.com/foundry-rs/forge-std

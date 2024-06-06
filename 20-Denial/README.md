@@ -32,13 +32,10 @@ However, because all the gas has been consumed, the subsequent `transfer()` to t
 forge script script/DeployDenialAttack.s.sol --rpc-url $ALCHEMY_RPC_URL --private-key $PRIVATE_KEY --broadcast --verify --etherscan-api-key $ETHERSCAN_API_KEY -vvvv --legacy
 
 # make deploy ARGS="--network sepolia"
-# https://sepolia.etherscan.io/address/0x1E9549eCe58eFBc6b3580b4075fC9a8D2eF73A53
-
-2. Attack
-
-```bash
-cast send $CONTRACT_ADDRESS "attack()" --private-key $PRIVATE_KEY --rpc-url $ALCHEMY_RPC_URL --legacy
+# https://sepolia.etherscan.io/address/0x0CD2194b047405F53779Fde89d5ea8f69CD56Bb7
 ```
+
+The `owner` will try to call the `withdraw()` function but the execution will go to our `receive()` function and will drain all the gas leading to a failed transaction.
 
 ## Fix
 

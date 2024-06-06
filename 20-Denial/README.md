@@ -42,6 +42,35 @@ cast send $CONTRACT_ADDRESS "attack()" --private-key $PRIVATE_KEY --rpc-url $ALC
 
 ## Fix
 
+You should follow the `Checks-Effects-Interactions` pattern. This means you should make any state changes before calling external contracts.
+
+```bash
+contract Denial {
+    address public partner; // withdrawal partner - pay the gas, split the withdraw
+    address public constant owner = msg.sender;
+
+    function setWithdrawPartner(address _partner) external {
+        partner = _partner;
+    }
+
+    function withdraw() public {
+        uint amount = address(this).balance / 2; // calculate the split value
+
+        // make state changes before calling external contracts
+        (bool successPartner, ) = partner.call{value: amount}("");
+        require(successPartner, "Partner transfer failed");
+
+        (bool successOwner, ) = owner.call{value: amount}("");
+        require(successOwner, "Owner transfer failed");
+    }
+
+    // deposit fallback
+    receive() external payable {}
+}
+```
+
+In this version of the `withdraw()` function, we first calculate the amount to be withdrawn. Then, we use the `call()` function to send the Ether and immediately check the return value. If the `call()` fails, the function will revert immediately, preventing any state changes. This way, we ensure that the state changes (the Ether transfers) only happen if both calls are successful, preventing `reentrancy` attacks.
+
 ## Notes
 ```
 The receive() function is only called when the call data is empty, i.e., when someone just sends Ether to the contract without calling any function. It was introduced in Solidity 0.6.0 to clarify the intention of the contract author.

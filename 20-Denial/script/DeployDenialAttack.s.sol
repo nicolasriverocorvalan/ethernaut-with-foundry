@@ -6,7 +6,7 @@ import {Script} from "forge-std/Script.sol";
 import {DenialAttack} from "../src/DenialAttack.sol";
 
 contract DeployPreservationAttack is Script {
-    address private constant DENIAL_ADDRESS = 0x6F106F21A75D1c0b3Cced6b54416693940B821d5; // Denial contract to attack
+    address private constant DENIAL_ADDRESS = 0x5ffA65421367da21332b41cD7f383CeCaB015FD5; // Denial contract to attack
 
     function run() external returns (DenialAttack) {
         vm.startBroadcast();

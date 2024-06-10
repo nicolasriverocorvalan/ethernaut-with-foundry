@@ -34,9 +34,29 @@ If `amount * IERC20(token2).balanceOf(address(this))` is not a multiple of `IERC
 
 ## Attack
 
+| Dex  |      | User |      |
+|------|------|------|------|
+|token1|token2|token1|token2|
+| 100  | 100  | 10   | 10   |
+| 110  | 90   | 0    | 20   |
+| 86   | 110  | 24   | 0    |
+| 110  | 80   | 0    | 30   |
+| 69   | 110  | 41   | 0    |
+| 110  | 45   | 0    | 65   |
+| 0    | 90   | 110  | 20   |
+
 ```bash
 $ python3.11 DexAttack.py
+
+# https://sepolia.etherscan.io/address/0x31f19CDb0FD6801A8A0CCf7B1D3e09208b5674Fd
 ```
 
-
 ## Fix
+
+1. Use a more precise arithmetic library or implement your own that can handle large numbers and fractional values without rounding down. This could be a library like `Decimal` in Python or `BigDecimal` in Java.
+
+2. Instead of directly using the balances of token1 and token2 to calculate the swap rate, use a price oracle or some other external, reliable source of pricing information to determine the correct swap rate.
+
+3. Implement checks to ensure that the User cannot drain the Dex's tokens. This could be a maximum limit on the size of a single swap or a check that the Dex's balance of a token cannot go below a certain threshold.
+
+4. Consider implementing a `slippage` protection mechanism. This would allow users to specify a maximum acceptable `slippage (price change)` for their swap. If the actual slippage exceeds this amount, the transaction would be reverted.

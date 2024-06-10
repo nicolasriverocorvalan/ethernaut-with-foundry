@@ -19,3 +19,6 @@
 [submodule "20-Denial/lib/forge-std"]
 	path = 20-Denial/lib/forge-std
 	url = https://github.com/foundry-rs/forge-std
+[submodule "21-Shop/lib/forge-std"]
+	path = 21-Shop/lib/forge-std
+	url = https://github.com/foundry-rs/forge-std

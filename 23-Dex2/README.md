@@ -21,7 +21,7 @@ This line is responsible for validating that swapping is only allowed between th
 | token1  |token2|  BTN |token1|token2|  BTN |
 | 100     |  100 |  100 |   10 |   10 |  300 |
 | 0       |  100 |  200 |  110 |   10 |  200 | swap(token1, BTN)
-| 0       |    0 |  300 |  110 |  110 |  0   | swap(token2, BTN)
+| 0       |    0 |  400 |  110 |  110 |  0   | swap(token2, BTN)
 
 ```bash
 function getSwapAmount(address from, address to, uint256 amount) public view returns (uint256) {
@@ -78,3 +78,13 @@ cast send $DEX2_ADDRESS "swap(address,address,uint256)" $CONTRACT_ADDRESS 0x60Be
 ```
 
 ## Fix
+
+1. Add a validation check in the swap function to ensure that the tokens being swapped are only the ones that the contract is supposed to handle.
+   
+2. Use a more precise arithmetic library or implement your own that can handle large numbers and fractional values without rounding down. This could be a library like `Decimal` in Python or `BigDecimal` in Java.
+
+3. Instead of directly using the balances of token1 and token2 to calculate the swap rate, use a price oracle or some other external, reliable source of pricing information to determine the correct swap rate.
+
+4. Implement checks to ensure that the User cannot drain the Dex's tokens. This could be a maximum limit on the size of a single swap or a check that the Dex's balance of a token cannot go below a certain threshold.
+
+5. Consider implementing a `slippage` protection mechanism. This would allow users to specify a maximum acceptable `slippage (price change)` for their swap. If the actual slippage exceeds this amount, the transaction would be reverted.

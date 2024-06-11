@@ -16,7 +16,7 @@ This line is responsible for validating that swapping is only allowed between th
 
 ## Attack
 
-| Dex Two |      |      | User |      |      |
+| Dex Two |      |      |Player|      |      |
 |---------|------|------|------|------|------|
 | token1  |token2|  BTN |token1|token2|  BTN |
 | 100     |  100 |  100 |   10 |   10 |  300 |

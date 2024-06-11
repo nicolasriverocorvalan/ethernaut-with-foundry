@@ -9,7 +9,7 @@ contract DeployDex2AttackToken is Script {
     function run() external returns (Dex2AttackToken) {
         vm.startBroadcast();
 
-        Dex2AttackToken dex2AttackToken = new Dex2AttackToken(400);
+        Dex2AttackToken dex2AttackToken = new Dex2AttackToken(300);
 
         vm.stopBroadcast();
         return dex2AttackToken;

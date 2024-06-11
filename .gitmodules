@@ -25,3 +25,6 @@
 [submodule "23-Dex2/lib/forge-std"]
 	path = 23-Dex2/lib/forge-std
 	url = https://github.com/foundry-rs/forge-std
+[submodule "23-Dex2/lib/openzeppelin-contracts"]
+	path = 23-Dex2/lib/openzeppelin-contracts
+	url = https://github.com/OpenZeppelin/openzeppelin-contracts

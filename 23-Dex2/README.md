@@ -1,66 +1,11 @@
-## Foundry
+# Dex2
 
-**Foundry is a blazing fast, portable and modular toolkit for Ethereum application development written in Rust.**
+This level requires you to exploit the DexTwo contract, a subtly modified version of the previous Dex contract, in a different manner. Your goal is to drain all balances of token1 and token2 from the DexTwo contract to complete the level.
 
-Foundry consists of:
+You begin with 10 tokens each of token1 and token2 and DexTwo contract initially holds 100 tokens each of token1 and token2.
 
--   **Forge**: Ethereum testing framework (like Truffle, Hardhat and DappTools).
--   **Cast**: Swiss army knife for interacting with EVM smart contracts, sending transactions and getting chain data.
--   **Anvil**: Local Ethereum node, akin to Ganache, Hardhat Network.
--   **Chisel**: Fast, utilitarian, and verbose solidity REPL.
+## Vulnerability
 
-## Documentation
+## Attack
 
-https://book.getfoundry.sh/
-
-## Usage
-
-### Build
-
-```shell
-$ forge build
-```
-
-### Test
-
-```shell
-$ forge test
-```
-
-### Format
-
-```shell
-$ forge fmt
-```
-
-### Gas Snapshots
-
-```shell
-$ forge snapshot
-```
-
-### Anvil
-
-```shell
-$ anvil
-```
-
-### Deploy
-
-```shell
-$ forge script script/Counter.s.sol:CounterScript --rpc-url <your_rpc_url> --private-key <your_private_key>
-```
-
-### Cast
-
-```shell
-$ cast <subcommand>
-```
-
-### Help
-
-```shell
-$ forge --help
-$ anvil --help
-$ cast --help
-```
+## Fix

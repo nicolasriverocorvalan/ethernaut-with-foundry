@@ -48,7 +48,7 @@ forge script script/DeployDex2AttackToken.s.sol --rpc-url $ALCHEMY_RPC_URL --pri
 2. Send 100 BTN from `Dex2AttackToken` to `Dex2`.
 
 ```bash
-cast send $CONTRACT_ADDRESS "transfer(address,uint256)" $DEX2_ADDRESS 100 --rpc-url $ALCHEMY_RPC_URL --private-key $PRIVATE_KEY --legacy
+cast send $CONTRACT_ADDRESS "transfer(address,uint256)" $DEX2_ADDRESS 300 --rpc-url $ALCHEMY_RPC_URL --private-key $PRIVATE_KEY --legacy
 
 # https://sepolia.etherscan.io/tx/0x74dc9b1123d966fd2e41651ff32bb91375b20b4d83d2732457971004b0c446ac
 

@@ -20,8 +20,8 @@ This line is responsible for validating that swapping is only allowed between th
 |---------|------|------|------|------|------|
 | token1  |token2|  BTN |token1|token2|  BTN |
 | 100     |  100 |  100 |   10 |   10 |  300 |
-| 0       |  100 |  200 |  110 |   10 |  200 |
-| 0       |    0 |  400 |  110 |  110 |    0 |
+| 0       |  100 |  200 |  110 |   10 |  200 | swap(token1, BTN)
+| 0       |    0 |  300 |  110 |  110 |  0   | swap(token2, BTN)
 
 ```bash
 function getSwapAmount(address from, address to, uint256 amount) public view returns (uint256) {

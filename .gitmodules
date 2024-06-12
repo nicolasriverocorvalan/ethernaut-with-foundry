@@ -28,3 +28,6 @@
 [submodule "23-Dex2/lib/openzeppelin-contracts"]
 	path = 23-Dex2/lib/openzeppelin-contracts
 	url = https://github.com/OpenZeppelin/openzeppelin-contracts
+[submodule "24-PuzzleWallet/lib/forge-std"]
+	path = 24-PuzzleWallet/lib/forge-std
+	url = https://github.com/foundry-rs/forge-std

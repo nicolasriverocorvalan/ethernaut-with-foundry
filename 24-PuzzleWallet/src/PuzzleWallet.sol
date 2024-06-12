@@ -4,6 +4,7 @@ pragma solidity ^0.8.0;
 pragma experimental ABIEncoderV2;
 
 import "@openzeppelin/contracts/proxy/ERC1967/ERC1967Proxy.sol";
+// Remix: import "https://github.com/OpenZeppelin/openzeppelin-contracts/blob/v4.0.0/contracts/proxy/ERC1967/ERC1967Proxy.sol";
 
 contract PuzzleProxy is ERC1967Proxy {
     address public pendingAdmin;

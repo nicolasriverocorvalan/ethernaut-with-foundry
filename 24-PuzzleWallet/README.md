@@ -191,19 +191,8 @@ With the contract's balance at 0.001 Ether, calling `deposit()` twice with 0.001
 
 Finally, after draining the contract, we can call `setMaxBalance()` to set the value of maxBalance and become the proxy admin.
 
-
-
-
-
-
-
-
-
-
-
-
-
-
 ## Attack
+
+
 
 ## Fix

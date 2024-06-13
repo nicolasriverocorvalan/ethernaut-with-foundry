@@ -34,3 +34,6 @@
 [submodule "24-PuzzleWallet/lib/openzeppelin-contracts"]
 	path = 24-PuzzleWallet/lib/openzeppelin-contracts
 	url = https://github.com/OpenZeppelin/openzeppelin-contracts
+[submodule "25-motorbike/lib/forge-std"]
+	path = 25-motorbike/lib/forge-std
+	url = https://github.com/foundry-rs/forge-std

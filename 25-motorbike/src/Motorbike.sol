@@ -2,6 +2,10 @@
 
 pragma solidity <0.7.0;
 
+// Remix
+// import "https://github.com/OpenZeppelin/openzeppelin-contracts/blob/v3.4.0/contracts/utils/Address.sol";
+// import "https://github.com/OpenZeppelin/openzeppelin-upgrades/blob/master/packages/core/contracts/Initializable.sol";
+
 import "@openzeppelin/contracts/utils/Address.sol";
 import "@openzeppelin/contracts-upgradeable/proxy/Initializable.sol";
 

@@ -193,6 +193,13 @@ Finally, after draining the contract, we can call `setMaxBalance()` to set the v
 
 ## Attack
 
+1. Deploy `PuzzleWalletAttack` and attack.
 
+```bash
+forge script script/DeployPuzzleWalletAttack.s.sol --rpc-url $ALCHEMY_RPC_URL --private-key $PRIVATE_KEY --broadcast --verify --etherscan-api-key $ETHERSCAN_API_KEY -vvvv --legacy
+
+# make deploy ARGS="--network sepolia"
+# https://sepolia.etherscan.io/address/0xfcdCf34cE63a4F92D45E552282EDbA1ed28A7629
+```
 
 ## Fix

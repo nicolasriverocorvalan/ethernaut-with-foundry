@@ -193,7 +193,7 @@ Finally, after draining the contract, we can call `setMaxBalance()` to set the v
 
 ## Attack
 
-1. Deploy `PuzzleWalletAttack` and attack.
+1. Deploy `PuzzleWalletAttack` and the attack will be executed.
 
 ```bash
 forge script script/DeployPuzzleWalletAttack.s.sol --rpc-url $ALCHEMY_RPC_URL --private-key $PRIVATE_KEY --broadcast --verify --etherscan-api-key $ETHERSCAN_API_KEY -vvvv --legacy
@@ -203,3 +203,5 @@ forge script script/DeployPuzzleWalletAttack.s.sol --rpc-url $ALCHEMY_RPC_URL --
 ```
 
 ## Fix
+
+Remove the multicall() function, as it is the root cause of the vulnerability. Allowing multiple function calls in a single transaction opens up the possibility for re-entrancy attacks. Additionally, the entire contract should be reviewed to establish all the necessary boundaries.

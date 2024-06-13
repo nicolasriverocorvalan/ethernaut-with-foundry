@@ -10,8 +10,8 @@ contract PuzzleWalletAttack is Script {
     PuzzleProxy public proxy;
 
     constructor() {
-        wallet = PuzzleWallet(0xad8D09e3E2CB54075D6EdaeB47201De61e3E7F69);
-        proxy = PuzzleProxy(payable(0xad8D09e3E2CB54075D6EdaeB47201De61e3E7F69));
+        wallet = PuzzleWallet(0x2075fEc657Bd3D54FC8bbD73426d902598C57C92);
+        proxy = PuzzleProxy(payable(0x2075fEc657Bd3D54FC8bbD73426d902598C57C92));
     }
 
     function run() external {

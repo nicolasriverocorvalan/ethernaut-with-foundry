@@ -4,6 +4,6 @@ pragma solidity <0.7.0;
 
 contract MotorbikeAttack {
     function attack() external {
-        selfdestruct(payable(address(0)));
+        selfdestruct(address(0)); // before 0.7.0, the address type was implicitly payable, so you don't need to explicitly cast it using payable
     }
 }

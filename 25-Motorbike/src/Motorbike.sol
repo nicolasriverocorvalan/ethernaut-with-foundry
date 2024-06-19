@@ -9,7 +9,8 @@ pragma solidity <0.7.0;
 import "@openzeppelin/contracts/utils/Address.sol";
 import "@openzeppelin/contracts-upgradeable/proxy/Initializable.sol";
 
-contract Motorbike {
+// Proxy contract
+contract Motorbike { 
     // keccak-256 hash of "eip1967.proxy.implementation" subtracted by 1
     bytes32 internal constant _IMPLEMENTATION_SLOT = 0x360894a13ba1a3210667c828492db98dca3e2076cc3735a920a3ca505d382bbc;
 
@@ -52,7 +53,8 @@ contract Motorbike {
     }
 }
 
-contract Engine is Initializable {
+// implementation contract
+contract Engine is Initializable { 
     // keccak-256 hash of "eip1967.proxy.implementation" subtracted by 1
     bytes32 internal constant _IMPLEMENTATION_SLOT = 0x360894a13ba1a3210667c828492db98dca3e2076cc3735a920a3ca505d382bbc;
 

@@ -121,24 +121,13 @@ If an attacker finds the address of the `implementation` contract and calls `ini
 
 ## Attack
 
-1. Deploy `MotorbikeAttack`
-
-```bash
-forge create MotorbikeAttack --rpc-url $ALCHEMY_RPC_URL --private-key $PRIVATE_KEY --legacy
-
-# attacker contract: https://sepolia.etherscan.io/address/0xC501f0BA86e95f97dDdaF7532E6459f2567d8522
-# implementation address: https://sepolia.etherscan.io/address/0x5e6Fca708fd78336eA9DC1d9b4fbfB4d903d8658
-```
-
-2. Deploy the attack script.
+1. Deploy `MotorbikeAttack` and the attack will be executed.
 
 ```bash
 forge script script/DeployMotorbikeAttack.s.sol --rpc-url $ALCHEMY_RPC_URL --private-key $PRIVATE_KEY --broadcast --verify --etherscan-api-key $ETHERSCAN_API_KEY -vvvv --legacy
 
 # make deploy ARGS="--network sepolia"
-#== Logs ==
-# Engine address is: 0x5e6Fca708fd78336eA9DC1d9b4fbfB4d903d8658
-# Attacker upgrader is: 0x64Dd9D94818A2CA2e95c31B084aeF0CC92e86dA2
+# https://sepolia.etherscan.io/address/0x0fe5d6cf6cbc49a3ce61fde297fc335451fb1757 (Engine contract)
 ```
 
 ## Fix

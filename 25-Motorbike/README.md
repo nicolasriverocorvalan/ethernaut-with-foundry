@@ -127,7 +127,8 @@ If an attacker finds the address of the `implementation` contract and calls `ini
 forge script script/DeployMotorbikeAttack.s.sol --rpc-url $ALCHEMY_RPC_URL --private-key $PRIVATE_KEY --broadcast --verify --etherscan-api-key $ETHERSCAN_API_KEY -vvvv --legacy
 
 # make deploy ARGS="--network sepolia"
-# https://sepolia.etherscan.io/address/0x0fe5d6cf6cbc49a3ce61fde297fc335451fb1757 (Engine contract)
+# https://sepolia.etherscan.io/address/0xdb62eCf5b813d2E668C4c0fB1502F4B120C22833 (Engine contract)
+# https://sepolia.etherscan.io/address/0x109C90673547CD1789dDC9B45A2db05F1b1026F4 (MotorbikeAttack contract)
 ```
 
 ## Fix

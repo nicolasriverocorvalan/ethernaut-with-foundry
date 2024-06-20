@@ -10,7 +10,7 @@ contract DeployMotorbikeAttack is Script {
     function run() external returns (MotorbikeAttack){
         vm.startBroadcast();
 
-        MotorbikeAttack motorbikeAttack = new MotorbikeAttack(address(0x0fE5D6cf6cBc49a3ce61fdE297fC335451FB1757));
+        MotorbikeAttack motorbikeAttack = new MotorbikeAttack(address(0xdb62eCf5b813d2E668C4c0fB1502F4B120C22833));
         motorbikeAttack.attack();
 
         vm.stopBroadcast();

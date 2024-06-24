@@ -82,9 +82,9 @@ forge script script/DeployDoubleEntryPointAttack.s.sol --rpc-url $ALCHEMY_RPC_UR
 1.
 
 ```bash
-forge create FortaBot --rpc-url $ALCHEMY_RPC_URL --private-key $PRIVATE_KEY --legacy --constructor-args 0x273D500203E52b20757eB93bD0244F6c9016F573
+forge create FortaBot --rpc-url $ALCHEMY_RPC_URL --private-key $PRIVATE_KEY --legacy --constructor-args 0xD94c78bBAB898777CbD847CfCf3d2B2917516F27
 
-# https://sepolia.etherscan.io/address/0x53d07c4967D325A6FDeEf3347D542e0B64FB14d5
+# https://sepolia.etherscan.io/address/0x342943E628B1418Df86F9F8639df9392C6D37ccd
 ```
 
 2.

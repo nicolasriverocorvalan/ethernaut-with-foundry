@@ -45,6 +45,55 @@ The vulnerability in the `DoubleEntryPoint.sol` contract arises from the interac
 
 ## Attack
 
+1.
+
+```bash
+forge script script/DoubleEntryPointScan.s.sol --rpc-url $ALCHEMY_RPC_URL --private-key $PRIVATE_KEY --legacy -vvvv
+
+Traces:
+  [19238] DoubleEntryPointScan::run()
+    ├─ [0] VM::startBroadcast()
+    │   └─ ← [Return] 
+    ├─ [2404] 0x0a6aADB6D5613F3B4aD69d98e9206e575120F16c::cryptoVault() [staticcall]
+    │   └─ ← [Return] 0x273D500203E52b20757eB93bD0244F6c9016F573 # CryptoVault contract
+    ├─ [2347] 0x273D500203E52b20757eB93bD0244F6c9016F573::underlying()
+    │   └─ ← [Return] 0x0a6aADB6D5613F3B4aD69d98e9206e575120F16c # Ethernaut contract
+    ├─ [2383] 0x0a6aADB6D5613F3B4aD69d98e9206e575120F16c::delegatedFrom() [staticcall]
+    │   └─ ← [Return] 0x602B58D4aB604b204A3f6088F5F015FaC771f76f # Legacy token contract
+    ├─ [0] VM::stopBroadcast()
+    │   └─ ← [Return] 
+    └─ ← [Stop] 
+
+# https://sepolia.etherscan.io/address/0x273D500203E52b20757eB93bD0244F6c9016F573#tokentxns
+````
+
+2. 
+
+```bash
+forge script script/DeployDoubleEntryPointAttack.s.sol --rpc-url $ALCHEMY_RPC_URL --private-key $PRIVATE_KEY --broadcast --verify --etherscan-api-key $ETHERSCAN_API_KEY -vvvv --legacy
+
+# https://sepolia.etherscan.io/token/0x0a6aadb6d5613f3b4ad69d98e9206e575120f16c
+# https://sepolia.etherscan.io/address/0x273D500203E52b20757eB93bD0244F6c9016F573#tokentxns
+```
+
+## Forta Bot
+
+1.
+
+```bash
+forge create FortaBot --rpc-url $ALCHEMY_RPC_URL --private-key $PRIVATE_KEY --legacy --constructor-args 0x273D500203E52b20757eB93bD0244F6c9016F573
+
+# https://sepolia.etherscan.io/address/0x53d07c4967D325A6FDeEf3347D542e0B64FB14d5
+```
+
+2.
+
+```bash
+forge script ./script/RegisterBot.s.sol --rpc-url $ALCHEMY_RPC_URL --private-key $PRIVATE_KEY --broadcast --legacy -vvvv
+
+# https://sepolia.etherscan.io/tx/0xe4754eb52d9155ffffa047e808f10b31a614ca3bf16ea739e0abde4138578da7
+```
+
 
 ## Fix
 

@@ -6,7 +6,7 @@ import "forge-std/Script.sol";
 import {DoubleEntryPoint} from"../src/DoubleEntryPoint.sol";
 
 contract DoubleEntryPointScan is Script {
-    DoubleEntryPoint public doubleEntryPoint = DoubleEntryPoint(0x0a6aADB6D5613F3B4aD69d98e9206e575120F16c);
+    DoubleEntryPoint public doubleEntryPoint = DoubleEntryPoint(0x9fC00a7f729AC7B226b7F626Db04E4280F264de7);
 
     function run() external{
         vm.startBroadcast();

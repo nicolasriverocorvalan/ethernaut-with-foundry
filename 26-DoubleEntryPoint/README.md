@@ -54,17 +54,18 @@ Traces:
   [19238] DoubleEntryPointScan::run()
     ├─ [0] VM::startBroadcast()
     │   └─ ← [Return] 
-    ├─ [2404] 0x0a6aADB6D5613F3B4aD69d98e9206e575120F16c::cryptoVault() [staticcall]
-    │   └─ ← [Return] 0x273D500203E52b20757eB93bD0244F6c9016F573 # CryptoVault contract
-    ├─ [2347] 0x273D500203E52b20757eB93bD0244F6c9016F573::underlying()
-    │   └─ ← [Return] 0x0a6aADB6D5613F3B4aD69d98e9206e575120F16c # Ethernaut contract
-    ├─ [2383] 0x0a6aADB6D5613F3B4aD69d98e9206e575120F16c::delegatedFrom() [staticcall]
-    │   └─ ← [Return] 0x602B58D4aB604b204A3f6088F5F015FaC771f76f # Legacy token contract
+    ├─ [2404] 0x9fC00a7f729AC7B226b7F626Db04E4280F264de7::cryptoVault() [staticcall]
+    │   └─ ← [Return] 0xD94c78bBAB898777CbD847CfCf3d2B2917516F27 # CryptoVault contract
+    ├─ [2347] 0xD94c78bBAB898777CbD847CfCf3d2B2917516F27::underlying()
+    │   └─ ← [Return] 0x9fC00a7f729AC7B226b7F626Db04E4280F264de7 # Ethernaut contract
+    ├─ [2383] 0x9fC00a7f729AC7B226b7F626Db04E4280F264de7::delegatedFrom() [staticcall]
+    │   └─ ← [Return] 0x03d56D9Cfcc5eF9D884fC36dc89429e94c485359 # Legacy token contract
     ├─ [0] VM::stopBroadcast()
     │   └─ ← [Return] 
     └─ ← [Stop] 
 
-# https://sepolia.etherscan.io/address/0x273D500203E52b20757eB93bD0244F6c9016F573#tokentxns
+# https://sepolia.etherscan.io/address/0xD94c78bBAB898777CbD847CfCf3d2B2917516F27
+# https://sepolia.etherscan.io/address/0xD94c78bBAB898777CbD847CfCf3d2B2917516F27#tokentxns
 ````
 
 2. 
@@ -72,8 +73,8 @@ Traces:
 ```bash
 forge script script/DeployDoubleEntryPointAttack.s.sol --rpc-url $ALCHEMY_RPC_URL --private-key $PRIVATE_KEY --broadcast --verify --etherscan-api-key $ETHERSCAN_API_KEY -vvvv --legacy
 
-# https://sepolia.etherscan.io/token/0x0a6aadb6d5613f3b4ad69d98e9206e575120f16c
-# https://sepolia.etherscan.io/address/0x273D500203E52b20757eB93bD0244F6c9016F573#tokentxns
+# https://sepolia.etherscan.io/tx/0x18b195dd95ce6a53b5ec8e7a13bc7d1306cf85ac59a5384e80fe76e51afd3f78
+# https://sepolia.etherscan.io/token/0x9fc00a7f729ac7b226b7f626db04e4280f264de7#balances
 ```
 
 ## Forta Bot

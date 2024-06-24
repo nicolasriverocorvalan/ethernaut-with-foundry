@@ -92,7 +92,8 @@ forge create FortaBot --rpc-url $ALCHEMY_RPC_URL --private-key $PRIVATE_KEY --le
 ```bash
 forge script ./script/RegisterBot.s.sol --rpc-url $ALCHEMY_RPC_URL --private-key $PRIVATE_KEY --broadcast --legacy -vvvv
 
-# https://sepolia.etherscan.io/tx/0xe4754eb52d9155ffffa047e808f10b31a614ca3bf16ea739e0abde4138578da7
+# https://sepolia.etherscan.io/tx/0xfd350ea711a81f0c863b04a08eebddcc4c50abd9de153b2fcff2507864aede65
+# https://sepolia.etherscan.io/address/0x2f2884c575902775527e0C7CA2506e85bA1F5FC5
 ```
 
 

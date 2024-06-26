@@ -11,7 +11,7 @@ contract RegisterBot is Script {
     function run() external{
         vm.startBroadcast();
 
-        doubleEntryPoint.forta().setDetectionBot(0x342943E628B1418Df86F9F8639df9392C6D37ccd);
+        doubleEntryPoint.forta().setDetectionBot(0x0CA7964911b3F29Cdba8C74853af729701A1Db63);
 
         vm.stopBroadcast();
     }

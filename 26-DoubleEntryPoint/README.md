@@ -8,6 +8,8 @@ In this level you should figure out where the bug is in `CryptoVault` and protec
 
 The contract features a `Forta` contract where any user can register its own `detection bot` contract. `Forta` is a decentralized, community-based monitoring network to detect threats and anomalies on DeFi, NFT, governance, bridges and other Web3 systems as quickly as possible. Your job is to implement a detection bot and register it in the `Forta` contract. The bot's implementation will need to raise correct alerts to prevent potential attacks or bug exploits.
 
+[Contract ABI Specification](https://docs.soliditylang.org/en/latest/abi-spec.html#contract-abi-specification)
+
 ## Double Entry Point (DEP)
 
 A `Double Entry Point (DEP)` in the context of token contracts is a security mechanism designed to protect smart contracts, especially those handling tokens, from unauthorized access or vulnerabilities.
@@ -46,8 +48,9 @@ The vulnerability in the `DoubleEntryPoint.sol` contract arises from the interac
 ## Attack
 
 1.
-
 ```bash
+# the delegate contract is the DoubleEntryPoint contract.
+
 forge script script/DoubleEntryPointScan.s.sol --rpc-url $ALCHEMY_RPC_URL --private-key $PRIVATE_KEY --legacy -vvvv
 
 Traces:
@@ -84,7 +87,7 @@ forge script script/DeployDoubleEntryPointAttack.s.sol --rpc-url $ALCHEMY_RPC_UR
 ```bash
 forge create FortaBot --rpc-url $ALCHEMY_RPC_URL --private-key $PRIVATE_KEY --legacy --constructor-args 0xD94c78bBAB898777CbD847CfCf3d2B2917516F27
 
-# https://sepolia.etherscan.io/address/0x342943E628B1418Df86F9F8639df9392C6D37ccd
+# https://sepolia.etherscan.io/address/0x0CA7964911b3F29Cdba8C74853af729701A1Db63
 ```
 
 2.
@@ -92,8 +95,7 @@ forge create FortaBot --rpc-url $ALCHEMY_RPC_URL --private-key $PRIVATE_KEY --le
 ```bash
 forge script ./script/RegisterBot.s.sol --rpc-url $ALCHEMY_RPC_URL --private-key $PRIVATE_KEY --broadcast --legacy -vvvv
 
-# https://sepolia.etherscan.io/tx/0xfd350ea711a81f0c863b04a08eebddcc4c50abd9de153b2fcff2507864aede65
-# https://sepolia.etherscan.io/address/0x2f2884c575902775527e0C7CA2506e85bA1F5FC5
+# https://sepolia.etherscan.io/tx/0x6412b5b2cb06ef6787fce4ae3269742ce2478443b2c4780547dd5859368aee12
 ```
 
 

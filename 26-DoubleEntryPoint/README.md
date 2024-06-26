@@ -51,24 +51,21 @@ The vulnerability in the `DoubleEntryPoint.sol` contract arises from the interac
 ```bash
 # the delegate contract is the DoubleEntryPoint contract.
 
-forge script script/DoubleEntryPointScan.s.sol --rpc-url $ALCHEMY_RPC_URL --private-key $PRIVATE_KEY --legacy -vvvv
+forge script script/DoubleEntryPointScan.s.sol --rpc-url $ALCHEMY_RPC_URL --private-key $PRIVATE_KEY --broadcast --legacy -vvvv
 
 Traces:
   [19238] DoubleEntryPointScan::run()
     ├─ [0] VM::startBroadcast()
     │   └─ ← [Return] 
-    ├─ [2404] 0x9fC00a7f729AC7B226b7F626Db04E4280F264de7::cryptoVault() [staticcall]
-    │   └─ ← [Return] 0xD94c78bBAB898777CbD847CfCf3d2B2917516F27 # CryptoVault contract
-    ├─ [2347] 0xD94c78bBAB898777CbD847CfCf3d2B2917516F27::underlying()
-    │   └─ ← [Return] 0x9fC00a7f729AC7B226b7F626Db04E4280F264de7 # Ethernaut contract
-    ├─ [2383] 0x9fC00a7f729AC7B226b7F626Db04E4280F264de7::delegatedFrom() [staticcall]
-    │   └─ ← [Return] 0x03d56D9Cfcc5eF9D884fC36dc89429e94c485359 # Legacy token contract
+    ├─ [2404] 0xD34d38b269c9523a9329833B228a46D3b44ABD21::cryptoVault() [staticcall]
+    │   └─ ← [Return] 0xE94cF7F7F221cd103f882C6E3e04fC4f6681B07f # CryptoVault contract
+    ├─ [2347] 0xE94cF7F7F221cd103f882C6E3e04fC4f6681B07f::underlying()
+    │   └─ ← [Return] 0xD34d38b269c9523a9329833B228a46D3b44ABD21 # Ethernaut contract
+    ├─ [2383] 0xD34d38b269c9523a9329833B228a46D3b44ABD21::delegatedFrom() [staticcall]
+    │   └─ ← [Return] 0x72B92c2c00971CAa02097E86ee578f650066C2BA # Legacy token contract
     ├─ [0] VM::stopBroadcast()
     │   └─ ← [Return] 
-    └─ ← [Stop] 
-
-# https://sepolia.etherscan.io/address/0xD94c78bBAB898777CbD847CfCf3d2B2917516F27
-# https://sepolia.etherscan.io/address/0xD94c78bBAB898777CbD847CfCf3d2B2917516F27#tokentxns
+    └─ ← [Stop]
 ````
 
 2. 

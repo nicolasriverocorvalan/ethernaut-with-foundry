@@ -7,7 +7,7 @@ import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
 import {DoubleEntryPoint, CryptoVault} from"../src/DoubleEntryPoint.sol";
 
 contract DeployDoubleEntryPointAttack is Script {
-    DoubleEntryPoint public doubleEntryPoint = DoubleEntryPoint(0x9fC00a7f729AC7B226b7F626Db04E4280F264de7);
+    DoubleEntryPoint public doubleEntryPoint = DoubleEntryPoint(0xD34d38b269c9523a9329833B228a46D3b44ABD21);
     address public deToken;
     address public lgToken;
 

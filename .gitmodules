@@ -49,3 +49,6 @@
 [submodule "26-DoubleEntryPoint/lib/openzeppelin-contracts"]
 	path = 26-DoubleEntryPoint/lib/openzeppelin-contracts
 	url = https://github.com/OpenZeppelin/openzeppelin-contracts
+[submodule "27-GoodSamaritan/lib/forge-std"]
+	path = 27-GoodSamaritan/lib/forge-std
+	url = https://github.com/foundry-rs/forge-std

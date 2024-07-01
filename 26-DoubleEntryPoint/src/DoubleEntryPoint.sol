@@ -44,16 +44,16 @@ contract Forta is IForta {
 }
 
 contract CryptoVault {
-    address public sweptTokensRecipient;
+    address public sweptTokensRecipient; // is set during the deployment of the contract inside the constructor
     IERC20 public underlying;
 
     constructor(address recipient) {
         sweptTokensRecipient = recipient;
     }
 
-    function setUnderlying(address latestToken) public {
-        require(address(underlying) == address(0), "Already set");
-        underlying = IERC20(latestToken);
+    function setUnderlying(address latestToken) public { // DET in this case
+        require(address(underlying) == address(0), "Already set"); // only set once
+        underlying = IERC20(latestToken); 
     }
 
     /*
@@ -62,7 +62,7 @@ contract CryptoVault {
 
     function sweepToken(IERC20 token) public {
         require(token != underlying, "Can't transfer underlying token");
-        token.transfer(sweptTokensRecipient, token.balanceOf(address(this)));
+        token.transfer(sweptTokensRecipient, token.balanceOf(address(this))); // calling the transfer function of the token
     }
 }
 
@@ -81,7 +81,7 @@ contract LegacyToken is ERC20("LegacyToken", "LGT"), Ownable {
         if (address(delegate) == address(0)) {
             return super.transfer(to, value);
         } else {
-            return delegate.delegateTransfer(to, value, msg.sender);
+            return delegate.delegateTransfer(to, value, msg.sender); // the delegate contract is the DoubleEntryPoint contract
         }
     }
 }
@@ -89,7 +89,7 @@ contract LegacyToken is ERC20("LegacyToken", "LGT"), Ownable {
 contract DoubleEntryPoint is ERC20("DoubleEntryPointToken", "DET"), DelegateERC20, Ownable {
     address public cryptoVault;
     address public player;
-    address public delegatedFrom;
+    address public delegatedFrom; // Legacy contract address
     Forta public forta;
 
     constructor(address legacyToken, address vaultAddress, address fortaAddress, address playerAddress) {
@@ -105,7 +105,7 @@ contract DoubleEntryPoint is ERC20("DoubleEntryPointToken", "DET"), DelegateERC2
         _;
     }
 
-    modifier fortaNotify() {
+    modifier fortaNotify() { //only used for the Forta bot
         address detectionBot = address(forta.usersDetectionBots(player));
 
         // Cache old number of bot alerts
@@ -121,7 +121,7 @@ contract DoubleEntryPoint is ERC20("DoubleEntryPointToken", "DET"), DelegateERC2
         if (forta.botRaisedAlerts(detectionBot) > previousValue) revert("Alert has been triggered, reverting");
     }
 
-    function delegateTransfer(address to, uint256 value, address origSender)
+    function delegateTransfer(address to, uint256 value, address origSender) // called by the LegacyToken contract, bot reverts the function execution if an alert is raised
         public
         override
         onlyDelegateFrom

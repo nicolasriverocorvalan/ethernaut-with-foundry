@@ -26,24 +26,24 @@ While the term `Double Entry Point` isn't standard in Ethereum or smart contract
 
 ## Vulnerability
 
-The vulnerability in the `DoubleEntryPoint.sol` contract arises from the interaction between the `CryptoVault`, `LegacyToken`, and `DoubleEntryPoint` contracts, specifically through the use of delegate calls and the manipulation of the `msg.sender` value. Here's a step-by-step explanation of how the vulnerability can be exploited:
-
-1. `CryptoVault` contract is designed to hold tokens, including a special token represented by the `DoubleEntryPoint` contract (DET). The `LegacyToken` (LGT) contract is another token that can delegate its transfer function to the `DoubleEntryPoint` contract.
-
-2. `LegacyToken` contract has a function `delegateToNewContract` that allows it to set the `DoubleEntryPoint` contract as its delegate. This means that calls to `LegacyToken.transfer` can be forwarded to `DoubleEntryPoint.delegateTransfer` via the delegate mechanism.
-
-3. `CryptoVault` has a `sweepToken` function intended to allow the transfer of any token except its underlying token (to prevent draining the vault of its primary asset). However, this function does not account for the possibility of delegate calls changing the execution context.
-
-4. The attacker convinces the vault to call `sweepToken` with the `LegacyToken` (LGT) as the target. The `sweepToken` function checks that `LGT` is not the underlying token and proceeds. It then calls `LegacyToken.transfer`, intending to transfer all `LGT` tokens to a recipient. Since `LegacyToken` has `DoubleEntryPoint` set as its delegate, the call is forwarded to `DoubleEntryPoint.delegateTransfer`.
-
-5. In `DoubleEntryPoint.delegateTransfer`, the `onlyDelegateFrom` modifier checks that `msg.sender` is the `LegacyToken` contract, which is true in this case. The `fortaNotify` modifier is designed to detect suspicious transactions but does not prevent the execution if the `LegacyToken` is the caller.
-
-6. The `delegateTransfer` function in `DoubleEntryPoint` executes, transferring `DET` tokens from the `CryptoVault` to the specified recipient. This effectively drains the `CryptoVault` of its `DET` tokens, bypassing the check in `sweepToken` that was supposed to prevent this exact scenario.
-
-
-
-
-
+1. Initial setup:
+   1. `CryptoVault` holds DET tokens and possibly other ERC20 tokens.
+   2. `LegacyToken (LGT)` is an ERC20 token with an added delegation feature.
+   3. `DoubleEntryPoint` is another ERC20 token (`DET`) that implements `DelegateERC20^ for delegation purposes and has a reference to `CryptoVault`.
+2. Safeguard:
+   1. `CryptoVault` has a `sweepToken` function designed to transfer any ERC20 token it holds to a predefined recipient, except for its underlying token (`DET` in this case), to prevent draining the vault of its primary asset.
+3. Attack:
+   1. The attacker notices that `LegacyToken (LGT)` can delegate its transfer function to another contract (`DoubleEntryPoint`) through `delegate.delegateTransfer`.
+   2. The attacker invokes `sweepToken` on `CryptoVault`, specifying the `LGT` token as the token to sweep.
+   3. `CryptoVault` checks if `LGT` is the underlying token (`DET`), which it's not, so it proceeds.
+   4. `CryptoVault` calls `LGT.transfer`, intending to transfer LGT tokens.
+4. Exploiting the delegation:
+   1. `LegacyToken`'s `transfer` function is overridden to delegate the transfer to `DoubleEntryPoint` if a delegate is set.
+   2. The call becomes `DoubleEntryPoint.delegateTransfer`, with the `to` parameter being the `sweptTokensRecipient`, the `value` being `CryptoVault`'s total balance of `LGT`, and `msg.sender` being `CryptoVault`.
+5. Bypassing Safeguards:
+   1. In `DoubleEntryPoint`, the `delegateTransfer` function checks if `msg.sender` is the `LegacyToken` contract, which it is, thus bypassing the `onlyDelegateFrom` modifier.
+   2. The `fortaNotify` modifier is designed to interact with a `Forta` detection bot but does not prevent the transfer.
+   3. `DoubleEntryPoint` then transfers `DET` tokens (the underlying asset of `CryptoVault` that was supposed to be safeguarded) to the specified recipient, effectively draining the vault of its primary asset.
 
 ## Attack
 
@@ -57,12 +57,12 @@ Traces:
   [19238] DoubleEntryPointScan::run()
     ├─ [0] VM::startBroadcast()
     │   └─ ← [Return] 
-    ├─ [2404] 0xD34d38b269c9523a9329833B228a46D3b44ABD21::cryptoVault() [staticcall]
-    │   └─ ← [Return] 0xE94cF7F7F221cd103f882C6E3e04fC4f6681B07f # CryptoVault contract
-    ├─ [2347] 0xE94cF7F7F221cd103f882C6E3e04fC4f6681B07f::underlying()
-    │   └─ ← [Return] 0xD34d38b269c9523a9329833B228a46D3b44ABD21 # DoubleEntryPoint/Ethernaut contract
-    ├─ [2383] 0xD34d38b269c9523a9329833B228a46D3b44ABD21::delegatedFrom() [staticcall]
-    │   └─ ← [Return] 0x72B92c2c00971CAa02097E86ee578f650066C2BA # Legacy token contract
+    ├─ [2404] 0x09EB1387490f88C413D80914cfdc9B94255729e8::cryptoVault() [staticcall]
+    │   └─ ← [Return] 0xfB8EF38BE23a2B6d3c572EB926fa2D0674EB3B21 # CryptoVault contract
+    ├─ [2347] 0xfB8EF38BE23a2B6d3c572EB926fa2D0674EB3B21::underlying()
+    │   └─ ← [Return] 0x09EB1387490f88C413D80914cfdc9B94255729e8 # DoubleEntryPoint/Ethernaut contract
+    ├─ [2383] 0x09EB1387490f88C413D80914cfdc9B94255729e8::delegatedFrom() [staticcall]
+    │   └─ ← [Return] 0x0E01F04Cf19fce75004AF6E02327E38d1CAF2517 # Legacy token contract
     ├─ [0] VM::stopBroadcast()
     │   └─ ← [Return] 
     └─ ← [Stop]
@@ -113,9 +113,9 @@ Traces:
 
 ```bash
 # Forta contract= 0xEA5834D9F6189326C6d687c78CE3B5E97fba190C
-forge create FortaBot --rpc-url $ALCHEMY_RPC_URL --private-key $PRIVATE_KEY --legacy --constructor-args 0xD94c78bBAB898777CbD847CfCf3d2B2917516F27
+forge create FortaBot --rpc-url $ALCHEMY_RPC_URL --private-key $PRIVATE_KEY --legacy --constructor-args 0xE94cF7F7F221cd103f882C6E3e04fC4f6681B07f
 
-# https://sepolia.etherscan.io/address/0x0CA7964911b3F29Cdba8C74853af729701A1Db63
+# https://sepolia.etherscan.io/address/0x6a317a83402C20B1175DBE76b8006BFEbC10Cf26
 ```
 
 2.
@@ -123,7 +123,7 @@ forge create FortaBot --rpc-url $ALCHEMY_RPC_URL --private-key $PRIVATE_KEY --le
 ```bash
 forge script ./script/RegisterBot.s.sol --rpc-url $ALCHEMY_RPC_URL --private-key $PRIVATE_KEY --broadcast --legacy -vvvv
 
-# https://sepolia.etherscan.io/tx/0x6412b5b2cb06ef6787fce4ae3269742ce2478443b2c4780547dd5859368aee12
+# https://sepolia.etherscan.io/tx/0x20cfbc2c28f7836f2efce8614da27308ca1806272bf1ad3517d7d593f3705594
 ```
 
 

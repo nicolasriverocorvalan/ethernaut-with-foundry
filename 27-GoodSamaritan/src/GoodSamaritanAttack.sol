@@ -8,8 +8,12 @@ contract GoodSamaritanAttack {
 
     error NotEnoughBalance();
 
-    GoodSamaritan public goodSamaritan  = GoodSamaritan(0xEF75fF8571E61bb82f0c3962DBdE2752Dbb6eD0f); // Good Samaritan instance address
+    GoodSamaritan public goodSamaritan;
     
+    constructor(address goodSamaritanAddress) {
+        goodSamaritan = GoodSamaritan(goodSamaritanAddress);
+    }
+
     function attack() external {
         goodSamaritan.requestDonation();
     }

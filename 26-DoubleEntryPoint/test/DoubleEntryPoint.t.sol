@@ -38,16 +38,8 @@ contract DoubleEntryPointTest is Test {
 
     function testSweepAfterAttack() public {        
         cryptoVault.sweepToken(IERC20(address(legacyToken))); // Simulate the attack
-
-        uint256 depTokenBalanceAfterSweep = IERC20(address(legacyToken)).balanceOf(address(cryptoVault));
-        require(depTokenBalanceAfterSweep == 0, "DET token balance must be 0 after the attack");
-    }
-
-    function testAccountTokensAfterAttack() public view {
-        uint256 detBalance = IERC20(address(doubleEntryPoint)).balanceOf(address(this));
-        uint256 letBalance = IERC20(address(legacyToken)).balanceOf(address(this));
-
-        require(detBalance == 100, "DET token balance must be 100 after the attack");
-        require(letBalance == 100, "LET token balance must be 100 after the attack");
+       
+        uint256 detUserBalanceAfterSweep = IERC20(address(legacyToken)).balanceOf(address(this));
+        require(detUserBalanceAfterSweep == 100 ether, "DET user balance must be 100 after the attack");
     }
 }

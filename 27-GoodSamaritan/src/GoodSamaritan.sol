@@ -2,7 +2,10 @@
 
 pragma solidity >=0.8.0 <0.9.0;
 
-import "openzeppelin-contracts-08/utils/Address.sol";
+import "@openzeppelin/contracts/utils/Address.sol";
+
+// Remix
+// import "openzeppelin-contracts/utils/Address.sol";
 
 contract GoodSamaritan {
     Wallet public wallet;
@@ -49,7 +52,7 @@ contract Coin {
             balances[msg.sender] -= amount_;
             balances[dest_] += amount_;
 
-            if (dest_.isContract()) {
+            if (dest_.isContract()) { // checking if the destination is a contract
                 // notify contract
                 INotifyable(dest_).notify(amount_);
             }

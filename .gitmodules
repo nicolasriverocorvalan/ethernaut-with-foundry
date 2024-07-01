@@ -52,3 +52,6 @@
 [submodule "27-GoodSamaritan/lib/forge-std"]
 	path = 27-GoodSamaritan/lib/forge-std
 	url = https://github.com/foundry-rs/forge-std
+[submodule "27-GoodSamaritan/lib/openzeppelin-contracts"]
+	path = 27-GoodSamaritan/lib/openzeppelin-contracts
+	url = https://github.com/OpenZeppelin/openzeppelin-contracts

@@ -1,66 +1,78 @@
-## Foundry
+# Good Samaritan
 
-**Foundry is a blazing fast, portable and modular toolkit for Ethereum application development written in Rust.**
+This instance represents a Good Samaritan that is wealthy and ready to donate some coins to anyone requesting it.
 
-Foundry consists of:
+Would you be able to drain all the balance from his Wallet?
 
--   **Forge**: Ethereum testing framework (like Truffle, Hardhat and DappTools).
--   **Cast**: Swiss army knife for interacting with EVM smart contracts, sending transactions and getting chain data.
--   **Anvil**: Local Ethereum node, akin to Ganache, Hardhat Network.
--   **Chisel**: Fast, utilitarian, and verbose solidity REPL.
+Things that might help:
 
-## Documentation
+[Solidity Custom Errors](https://soliditylang.org/blog/2021/04/21/custom-errors/)
 
-https://book.getfoundry.sh/
+## Vulnerability
 
-## Usage
+1. The attacker calls `requestDonation()` on the `GoodSamaritan` contract.
+2. Inside `requestDonation()`, the contract attempts to donate 10 coins to the caller by calling `wallet.donate10(msg.sender)`.
+3. If the donation attempt is successful, `wallet.donate10` will internally call `coin.transfer()` to move the coins.
+4. Design an attacker's contract to have a `notify()` function. When `coin.transfer()` checks if the recipient address is a contract and calls `notify()`, the attacker's `notify()` function intentionally reverts with a custom error named `NotEnoughBalance()`.
+5. The custom error causes the `try-catch` block in `requestDonation()` to catch the error. Since the error matches the condition for `NotEnoughBalance()`, the `wallet.transferRemainder(msg.sender)` is executed, intending to transfer remaining tokens to the attacker.
 
-### Build
+## Attack
 
-```shell
-$ forge build
+1. Deploy `GoodSamaritanAttack` and the attack will be executed.
+
+```bash
+forge script script/DeployGoodSamaritanAttack.s.sol --rpc-url $ALCHEMY_RPC_URL --private-key $PRIVATE_KEY --broadcast --verify --etherscan-api-key $ETHERSCAN_API_KEY -vvvv --legacy
+
+# make deploy ARGS="--network sepolia"
 ```
 
-### Test
+2. Attack
 
-```shell
-$ forge test
+```bash
+cast send $CONTRACT_ADDRESS "attack()" --private-key $PRIVATE_KEY --rpc-url $ALCHEMY_RPC_URL --legacy -vvvv
 ```
 
-### Format
+## Fix
 
-```shell
-$ forge fmt
-```
+```bash
+#Importing a reentrancy guard from OpenZeppelin's contracts library
+import "@openzeppelin/contracts/security/ReentrancyGuard.sol";
 
-### Gas Snapshots
+contract GoodSamaritan is ReentrancyGuard {
+    mapping(address => uint256) public pendingWithdrawals;
 
-```shell
-$ forge snapshot
-```
+    # Other contract variables and functions
 
-### Anvil
+    function requestDonation() external nonReentrant {
+        uint256 donationAmount = 10;
+        # Assuming `wallet` is an instance of another contract that holds funds
+        uint256 walletBalance = wallet.getBalance();
 
-```shell
-$ anvil
-```
+        if (walletBalance >= donationAmount) {
+            # Attempt to donate 10 coins
+            bool success = wallet.donate10(msg.sender);
+            if (!success) {
+                revert("Donation failed");
+            }
+        } else {
+            # Instead of transferring directly, update the pending withdrawals
+            pendingWithdrawals[msg.sender] += walletBalance;
+            # Assuming a function that safely empties the wallet to this contract
+            wallet.transferAllTo(address(this));
+        }
+    }
 
-### Deploy
+    function withdraw() public nonReentrant {
+        uint256 amount = pendingWithdrawals[msg.sender];
+        require(amount > 0, "No funds available for withdrawal");
 
-```shell
-$ forge script script/Counter.s.sol:CounterScript --rpc-url <your_rpc_url> --private-key <your_private_key>
-```
+        # Reset the pending withdrawal before transferring to prevent reentrancy
+        pendingWithdrawals[msg.sender] = 0;
 
-### Cast
+        (bool sent, ) = msg.sender.call{value: amount}("");
+        require(sent, "Failed to send Ether");
+    }
 
-```shell
-$ cast <subcommand>
-```
-
-### Help
-
-```shell
-$ forge --help
-$ anvil --help
-$ cast --help
+    # Additional functions as needed
+}
 ```

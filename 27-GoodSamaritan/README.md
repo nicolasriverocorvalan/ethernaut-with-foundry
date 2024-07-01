@@ -24,12 +24,14 @@ Things that might help:
 forge script script/DeployGoodSamaritanAttack.s.sol --rpc-url $ALCHEMY_RPC_URL --private-key $PRIVATE_KEY --broadcast --verify --etherscan-api-key $ETHERSCAN_API_KEY -vvvv --legacy
 
 # make deploy ARGS="--network sepolia"
+# https://sepolia.etherscan.io/address/0x8D9D91659B8661C1d8Fd9b4417385F2DF82f4D5C
 ```
 
 2. Attack
 
 ```bash
-cast send $CONTRACT_ADDRESS "attack()" --private-key $PRIVATE_KEY --rpc-url $ALCHEMY_RPC_URL --legacy -vvvv
+cast send $CONTRACT_ADDRESS "attack()" --private-key $PRIVATE_KEY --rpc-url $ALCHEMY_RPC_URL --legacy
+# https://sepolia.etherscan.io/tx/0x46afd9f2f403a22e36d4148374eedcf08de11ce358794c5839e0e23a3cb088a0
 ```
 
 ## Fix

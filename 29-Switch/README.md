@@ -4,17 +4,22 @@ Just have to flip the switch. Can't be that hard, right?
 
 ## CALLDATA
 
-`CALLDATA` is a special area where the input data of a function call is stored. This data includes the function identifier (also known as the function selector) and any parameters passed to the function. The encoding of `CALLDATA` is crucial for the Ethereum Virtual Machine (EVM) to correctly identify and execute the intended function and handle its parameters.
+`CALLDATA` is a read-only byte-addressable space where the data of a transaction or function call is stored in Ethereum smart contracts. It's used to encode function arguments that are sent along with a function call to a contract. Understanding calldata flow involves knowing how data is structured and passed to functions within the Ethereum Virtual Machine (EVM).
 
 ### How CALLDATA is encoded
 
-1. `Function selector`: The first `4 bytes` of `CALLDATA` are reserved for the function selector. This is derived from the first 4 bytes of the Keccak-256 hash of the function signature (e.g., `transfer(address,uint256)`). The function signature includes the function name and the parenthesized list of parameter types. The function selector allows the EVM to determine which function is being called.
-2. `Parameters encoding`: After the function selector, the parameters of the function call are encoded. Solidity uses the `Ethereum Contract ABI (Application Binary Interface)` specification for encoding these parameters. The encoding of parameters is done as follows:
-   1. `Elementary types`: Elementary types like uint256, address, etc., are encoded as 32 bytes, with more significant bytes added to the left if necessary. For example, an address which is 20 bytes long will have 12 leading zero bytes when encoded.
-   2. `Dynamic types`: Types such as bytes and string, whose size can change, are encoded differently. First, the offset to the start of their data is encoded as a 32-byte number, followed by the length of the data (also as a 32-byte number), and then the actual data. The offset is calculated from the start of the function arguments.
-   3. `Arrays and Structs`: For arrays and structs, each element or field is encoded sequentially, following the rules for their types. Fixed-size arrays and structs are encoded inline, while dynamic arrays include an offset to the start of their data, similar to dynamic types.
-3. `Packed vs. Unpacked`: By default, Solidity uses "packed" encoding for `CALLDATA` to save space and gas. However, when interacting with contracts externally (e.g., via web3.js or ethers.js), the `ABI-encoded` data is typically "unpacked" for readability and standardization purposes.
-4. Example: Consider a function call `transfer(address recipient, uint256 amount)`. The `CALLDATA` for this call would start with the function selector for `transfer(address,uint256)`, followed by the 32-byte encoded `address` of the recipient (with leading zeros), and then the 32-byte encoded `amount`.
+1. `Function selector`: The first `4 bytes` of `CALLDATA` are reserved for the function selector. This is derived from the first 4 bytes of the Keccak-256 hash of the function signature (e.g., `transfer(address,uint256)`). The function selector is used by the EVM to determine which function to execute within the smart contract.
+
+2. `Parameters encoding`: After the function selector, the parameters of the function call are encoded. Solidity uses the `Ethereum Contract ABI (Application Binary Interface)` specification for encoding these parameters.
+
+3. `Fixed and Dynamic Types`: The Ethereum ABI differentiates between fixed-size types (like `uint256`, `address`, etc.) and dynamic types (like `bytes`, `string`, etc.). Fixed-size types are encoded directly in the calldata following the function selector. Dynamic types, however, are encoded differently to handle their variable size.
+
+4. `Dynamic Types Encoding`:
+
+   1. For dynamic types, the calldata includes an offset instead of the data itself immediately after the function selector and fixed-size arguments. This offset points to the location within the calldata where the actual data for the dynamic type starts.
+   2. The actual data for a dynamic type begins with its length (for types like `bytes` and `string`) and is followed by the data itself. This length is necessary because the EVM needs to know how much data to read for these variable-length types.
+
+5. `Padding`: The Ethereum ABI requires that all elements in the calldata are aligned to `32 bytes`. This means that if an argument does not naturally align to `32 bytes`, it must be `right-padded` with zeros. 
 
 ### calldatacopy
 
@@ -32,11 +37,12 @@ It's often used in low-level operations, such as when a contract needs to dynami
 
 ```bash
 assembly {
-    calldatacopy(selector, 68, 4) // grab function selector from calldata
+    # copy 4 bytes from calldata at position 68 into the memory location starting at selector
+    calldatacopy(selector, 68, 4) # grab function selector from calldata
 }
 ```
 
-This line copies 4 bytes (the size of a function selector) from the call data starting at position 68 into the `selector` variable in memory. The choice of position 68 assumes a specific layout of the call data, likely based on the structure of the transaction being sent to `flipSwitch`.
+The choice of position 68 assumes a specific layout of the call data, likely based on the structure of the transaction being sent to `flipSwitch`.
 
 ## Vulnerability
 

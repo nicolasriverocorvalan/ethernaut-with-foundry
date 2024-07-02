@@ -18,6 +18,13 @@ Things that might help:
 
 ## Attack
 
+- The `GoodSamaritan` contract is designed to donate coins to anyone requesting it through the `requestDonation()` function. It uses a `Wallet` contract to manage the donation and a `Coin` contract to handle the actual transfer of coins.
+- When an attacker calls `requestDonation()` on the `GoodSamaritan` contract, the contract attempts to donate 10 coins to the caller by calling `wallet.donate10(msg.sender)`.
+- The `Wallet` contract's donate10 function calls the `Coin` contract's transfer function to move 10 coins to the requester. If the recipient is a contract (as it would be in the case of an attack), the `Coin` contract's `transfer` function attempts to notify the recipient by calling its `notify(uint256 amount)` function.
+- The attacker's contract implements a `notify` function that reverts with a custom error `NotEnoughBalance()` if the amount is less than or equal to 10. This custom error is specifically crafted to trigger a catch block in the `GoodSamaritan` contract.
+- The `GoodSamaritan` contract's `requestDonation()` function has a `try-catch` block that catches errors from the `wallet.donate10` call. If the caught error matches the signature of `NotEnoughBalance()`, the contract assumes there's not enough balance to donate 10 coins and proceeds to transfer the remainder of the wallet's balance to the requester by calling `wallet.transferRemainder(msg.sender)`.
+- The vulnerability must be exploited by the attacker's contract intentionally failing with `NotEnoughBalance()` when 10 coins are attempted to be transferred to it. This failure triggers the `GoodSamaritan` contract to transfer the remainder of its balance to the attacker, instead of just the intended 10 coins.
+
 1. Check initial balance.
 
 ```bash
@@ -57,6 +64,8 @@ cast call 0x04BE262c1f2D1b2EFd7eBaaAeD584b8222661916 "balances(address)(uint256)
 
 ## Fix
 
+Contracts should avoid making assumptions based on the execution outcome of external contract calls, especially when those calls are to untrusted contracts. Additionally, using more precise checks and conditions, rather than relying on custom errors for control flow, can help prevent such exploits.
+
 ```bash
 #Importing a reentrancy guard from OpenZeppelin's contracts library
 import "@openzeppelin/contracts/security/ReentrancyGuard.sol";
@@ -68,7 +77,6 @@ contract GoodSamaritan is ReentrancyGuard {
 
     function requestDonation() external nonReentrant {
         uint256 donationAmount = 10;
-        # Assuming `wallet` is an instance of another contract that holds funds
         uint256 walletBalance = wallet.getBalance();
 
         if (walletBalance >= donationAmount) {

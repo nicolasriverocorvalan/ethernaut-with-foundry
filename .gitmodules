@@ -58,3 +58,6 @@
 [submodule "28-GatekeeperThree/lib/forge-std"]
 	path = 28-GatekeeperThree/lib/forge-std
 	url = https://github.com/foundry-rs/forge-std
+[submodule "29-Switch/lib/forge-std"]
+	path = 29-Switch/lib/forge-std
+	url = https://github.com/foundry-rs/forge-std

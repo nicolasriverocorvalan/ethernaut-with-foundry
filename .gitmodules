@@ -64,3 +64,6 @@
 [submodule "30-HigherOrder/lib/forge-std"]
 	path = 30-HigherOrder/lib/forge-std
 	url = https://github.com/foundry-rs/forge-std
+[submodule "31-Stake/lib/forge-std"]
+	path = 31-Stake/lib/forge-std
+	url = https://github.com/foundry-rs/forge-std

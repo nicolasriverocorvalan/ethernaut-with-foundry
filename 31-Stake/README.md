@@ -1,66 +1,15 @@
-## Foundry
+# Stake
 
-**Foundry is a blazing fast, portable and modular toolkit for Ethereum application development written in Rust.**
+Stake is safe for staking native ETH and ERC20 WETH, considering the same 1:1 value of the tokens. Can you drain the contract?
 
-Foundry consists of:
+To complete this level, the contract state must meet the following conditions:
 
--   **Forge**: Ethereum testing framework (like Truffle, Hardhat and DappTools).
--   **Cast**: Swiss army knife for interacting with EVM smart contracts, sending transactions and getting chain data.
--   **Anvil**: Local Ethereum node, akin to Ganache, Hardhat Network.
--   **Chisel**: Fast, utilitarian, and verbose solidity REPL.
+* The Stake contract's ETH balance has to be greater than 0.
+* totalStaked must be greater than the Stake contract's ETH balance.
+* You must be a staker.
+* Your staked balance must be 0.
 
-## Documentation
+[ERC-20 specification](https://github.com/ethereum/ercs/blob/master/ERCS/erc-20.md)
 
-https://book.getfoundry.sh/
+[OpenZeppelin contracts](https://github.com/OpenZeppelin/openzeppelin-contracts)
 
-## Usage
-
-### Build
-
-```shell
-$ forge build
-```
-
-### Test
-
-```shell
-$ forge test
-```
-
-### Format
-
-```shell
-$ forge fmt
-```
-
-### Gas Snapshots
-
-```shell
-$ forge snapshot
-```
-
-### Anvil
-
-```shell
-$ anvil
-```
-
-### Deploy
-
-```shell
-$ forge script script/Counter.s.sol:CounterScript --rpc-url <your_rpc_url> --private-key <your_private_key>
-```
-
-### Cast
-
-```shell
-$ cast <subcommand>
-```
-
-### Help
-
-```shell
-$ forge --help
-$ anvil --help
-$ cast --help
-```

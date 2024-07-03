@@ -16,7 +16,7 @@ Just have to flip the switch. Can't be that hard, right?
 
 4. `Dynamic Types Encoding`:
 
-   1. For dynamic types, the calldata includes an offset instead of the data itself immediately after the function selector and fixed-size arguments. This offset points to the location within the calldata where the actual data for the dynamic type starts.
+   1. For dynamic types, the calldata includes an offset (pointer) instead of the data itself immediately after the function selector and fixed-size arguments. This offset points to the location within the calldata where the actual data for the dynamic type starts.
    2. The actual data for a dynamic type begins with its length (for types like `bytes` and `string`) and is followed by the data itself. This length is necessary because the EVM needs to know how much data to read for these variable-length types.
 
 5. `Padding`: The Ethereum ABI requires that all elements in the calldata are aligned to `32 bytes`. This means that if an argument does not naturally align to `32 bytes`, it must be `right-padded` with zeros. 
@@ -46,6 +46,30 @@ The choice of position 68 assumes a specific layout of the call data, likely bas
 
 ## Vulnerability
 
+1. Function Selector for `flipSwitch(bytes memory data)`: `30c13ade`
+
+This is the first 4 bytes of the calldata and is used to identify which function to call in the smart contract.
+
+2. Offset for the data field: `0000000000000000000000000000000000000000000000000000000000000060`
+
+This indicates the start of the data for the `bytes memory data` parameter. In Solidity, complex data types like `bytes` and `string` are passed by reference, with this part specifying the offset (in bytes) from the start of the calldata to where the data begins. The offset (pointer) `0x60` (`96` in decimal) is used because it points to the start of the data after the function selector (4 bytes), the offset itself (32 bytes), and the length of data (32 bytes). This structure allows the EVM to correctly parse and handle dynamic data types in function calls.
+
+3. Padding to reach the `64-byte` offset: `0000000000000000000000000000000000000000000000000000000000000000`
+
+Solidity and the EVM require that certain elements in calldata be aligned to specific boundaries for efficient access and to conform to the ABI (Application Binary Interface) specifications. The 64-byte boundary mentioned is part of these alignment requirements. The padding ensures that the next significant piece of data starts at a 64-byte boundary. 
+
+4. Function selector for `turnSwitchOff()`: 20606e1500000000000000000000000000000000000000000000000000000000
+
+This part is intended to mimic a legitimate call to `turnSwitchOff()` by including its function selector. The function selector is followed by padding to fill the rest of the `32-byte` slot.
+
+5. Length of data field: `0000000000000000000000000000000000000000000000000000000000000004`
+
+This specifies the length of the actual data being passed. Although it's part of an exploit, it's marked as 4 bytes, indicating the size of the function selector for `turnSwitchOn()`. This is a clever trick to pass the correct length for the `turnSwitchOn()` selector while misleading the contract about the intended action.
+
+6. Function selector for `turnSwitchOn()`: `76227e1200000000000000000000000000000000000000000000000000000000`
+
+This is the actual function selector that the exploit wishes to execute. By placing it after the `turnSwitchOff()` selector, the exploit attempts to execute `turnSwitchOn()` while bypassing security checks that look for the `turnSwitchOff()` selector.
+
 ```bash
 ✗ cast sig "flipSwitch(bytes)"
 0x30c13ade
@@ -56,38 +80,21 @@ cast sig "turnSwitchOff()"
 ✗ cast sig "turnSwitchOn()"
 0x76227e12
 ```
-1. Function Selector for `flipSwitch(bytes memory data)`: `30c13ade`
-
-This is the first 4 bytes of the calldata and is used to identify which function to call in the smart contract.
-
-2. Offset for the data field: `0000000000000000000000000000000000000000000000000000000000000060`
-
-This indicates the start of the data for the `bytes memory data` parameter. In Solidity, complex data types like `bytes` and `string` are passed by reference, with this part specifying the offset (in bytes) from the start of the calldata to where the data begins. The offset is `96 bytes` (`0x60` in hexadecimal), pointing to the location after the initial function selector and the length of the bytes array.
-
-3. Padding to reach the `64-byte` offset: `0000000000000000000000000000000000000000000000000000000000000000`
-
-This is used to align the next part of the calldata to a `64-byte` boundary, as per Solidity's convention for handling calldata.
-
-4. Function selector for `turnSwitchOff()`: 20606e1500000000000000000000000000000000000000000000000000000000
-
-This part is intended to mimic a legitimate call to `turnSwitchOff()` by including its function selector. The function selector is followed by padding to fill the rest of the `32-byte` slot.
-
-5. Length of data field: `0000000000000000000000000000000000000000000000000000000000000004`
-
-This specifies the length of the data being passed to the `flipSwitch` function. In this case, it indicates that the data is `4 bytes` long, which is incorrect given the actual length of the data provided. This is part of the crafted exploit.
-
-6. Function selector for `turnSwitchOn()`: `76227e1200000000000000000000000000000000000000000000000000000000`
-
-This is the actual data being passed to the `flipSwitch` function, intended to trigger a call to`turnSwitchOn()` by including its function selector. This part of the calldata is designed to exploit the contract by bypassing intended logic checks.
 
 ```bash
+
+0        4 bytes      32 bytes             64 bytes (0x40)          96 bytes (0x60)
+| Function Selector | Offset to `data` | Length of `data` | Actual `data` bytes... |
+
 # Calldata layout (32-byte slots)
-# 30c13ade                                                         -> function Selector for flipSwitch(bytes memory data)
+# 30c13ade                                                         -> function Selector for flipSwitch(bytes memory data) - 4 bytes
 # 0000000000000000000000000000000000000000000000000000000000000060 -> offset for the data field
 # 0000000000000000000000000000000000000000000000000000000000000000 -> padding
 # 20606e1500000000000000000000000000000000000000000000000000000000 -> function selector for turnSwitchOff()
-# 0000000000000000000000000000000000000000000000000000000000000004 -> length of data field
+# 0000000000000000000000000000000000000000000000000000000000000004 -> (4 bytes, the length of the function selector) (**)
 # 76227e1200000000000000000000000000000000000000000000000000000000 -> function selector for turnSwitchOn()
+
+# (**) length of _data: you'll pretend to call turnSwitchOff() to pass the modifier check but actually call turnSwitchOn(). The length is for the turnSwitchOn() selector, which is 4 bytes.
 ```
 
 ## Attack

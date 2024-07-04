@@ -83,6 +83,5 @@ cast send $CONTRACT_ADDRESS "solveGateThree()" --private-key $PRIVATE_KEY --rpc-
 cast send $CONTRACT_ADDRESS "attack()" --private-key $PRIVATE_KEY --rpc-url $ALCHEMY_RPC_URL --legacy
 ```
 
-
 ## Fix
 

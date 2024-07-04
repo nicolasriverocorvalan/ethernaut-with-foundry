@@ -6,7 +6,7 @@ interface IGatekeeperThree {
     function construct0r() external;
     function createTrick() external;
     function getAllowance(uint256) external;
-    function enter() external returns (bool);
+    function enter() external;
 }
 
 contract GatekeeperThreeAttack {

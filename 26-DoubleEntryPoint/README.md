@@ -130,6 +130,68 @@ Traces:
     └─ ← [Stop]
 ```
 
-
 ## Fix
 
+1. Enhance CryptoVault's safeguard against delegated transfers:
+   1. Modify the `sweepToken` function in CryptoVault to check not only if the token is the underlying token but also if the token has delegation capabilities that could potentially be used to transfer the underlying token indirectly.
+   2. This can be achieved by maintaining a list of tokens with delegation capabilities and checking against it before proceeding with the sweep.
+
+2. Introduce a whitelist mechanism in `DoubleEntryPoint`:
+   1. Implement a whitelist mechanism in `DoubleEntryPoint` that restricts which contracts or addresses can call `delegateTransfer`. This whitelist should only include addresses that are known to not cause unintended transfers of `DET` tokens.
+   2. `CryptoVault` should manage this whitelist, adding or removing tokens based on their delegation capabilities and potential risk.
+
+3. Expand FortaBot rules as needed. 
+
+```bash
+# Modifications in CryptoVault
+contract CryptoVault {
+    ...
+    # Add a mapping to track tokens with known delegation capabilities
+    mapping(address => bool) public tokensWithDelegation;
+
+    function setTokenDelegationCapability(address token, bool hasDelegation) public {
+        // Only callable by the owner or through a governance mechanism
+        tokensWithDelegation[token] = hasDelegation;
+    }
+
+    function sweepToken(IERC20 token) public {
+        require(token != underlying, "Can't transfer underlying token");
+        require(!tokensWithDelegation[address(token)], "Token has delegation capabilities");
+        token.transfer(sweptTokensRecipient, token.balanceOf(address(this)));
+    }
+    ...
+}
+
+# Modifications in DoubleEntryPoint
+contract DoubleEntryPoint {
+    ...
+    # Whitelist mechanism
+    mapping(address => bool) public whitelist;
+
+    function addToWhitelist(address addr) public onlyOwner {
+        whitelist[addr] = true;
+    }
+
+    function removeFromWhitelist(address addr) public onlyOwner {
+        whitelist[addr] = false;
+    }
+
+    modifier onlyWhitelisted() {
+        require(whitelist[msg.sender], "Not whitelisted");
+        _;
+    }
+
+    function delegateTransfer(address to, uint256 value, address origSender)
+        public
+        override
+        onlyDelegateFrom
+        onlyWhitelisted // Apply the whitelist check
+        fortaNotify
+        returns (bool)
+    {
+        _transfer(origSender, to, value);
+        return true;
+    }
+    ...
+}
+```

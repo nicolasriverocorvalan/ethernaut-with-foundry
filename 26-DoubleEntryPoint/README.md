@@ -114,6 +114,20 @@ Traces:
 
 ```bash
 forge script script/DeployFortaBot.s.sol --rpc-url $ALCHEMY_RPC_URL --private-key $PRIVATE_KEY --broadcast --legacy -vvvv
+
+Traces:
+  [193286] RegisterBot::run()
+    ├─ [0] VM::startBroadcast()
+    │   └─ ← [Return] 
+    ├─ [100478] → new FortaBot@0x6108Bb9aB947A05C2b39926a1da9e4dAA8852A6d
+    │   └─ ← [Return] 390 bytes of code
+    ├─ [2381] 0xd2ed0d4BcB72DaD1f452a1Fb865EE326c27AD865::forta() [staticcall]
+    │   └─ ← [Return] 0xd947c7EA648780B416ebA96fCa13FB7D63aeDD30
+    ├─ [22515] 0xd947c7EA648780B416ebA96fCa13FB7D63aeDD30::setDetectionBot(FortaBot: [0x6108Bb9aB947A05C2b39926a1da9e4dAA8852A6d])
+    │   └─ ← [Stop] 
+    ├─ [0] VM::stopBroadcast()
+    │   └─ ← [Return] 
+    └─ ← [Stop]
 ```
 
 

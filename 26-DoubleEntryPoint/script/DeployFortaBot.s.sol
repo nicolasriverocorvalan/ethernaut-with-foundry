@@ -7,9 +7,9 @@ import {DoubleEntryPoint} from"../src/DoubleEntryPoint.sol";
 import {FortaBot} from"../src/FortaBot.sol";
 
 contract RegisterBot is Script {
-    DoubleEntryPoint public doubleEntryPoint = DoubleEntryPoint(0x055b8Ca8dd26e6932E24dB7F9c2e0569faAE770C);
+    DoubleEntryPoint public doubleEntryPoint = DoubleEntryPoint(0xd2ed0d4BcB72DaD1f452a1Fb865EE326c27AD865);
     FortaBot public fortaBot;
-    address public vaultAddress = 0xFAf657dB02Db174eB45eC8A0f5C8C45E0F1c9760;
+    address public vaultAddress = 0xae598C7e5B4e6758c299763954764781F1A02361;
 
     function run() external{
         vm.startBroadcast();

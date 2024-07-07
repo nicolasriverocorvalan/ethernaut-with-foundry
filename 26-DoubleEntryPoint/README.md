@@ -46,16 +46,16 @@ The calldata layout for the `handleTransaction` function, as seen by our Detecti
 
 We must extract the `origSender` from the calldata using `calldataload(0xa8)` and compare it against the `cryptoVault` address. If they match, an alert is raised through `IForta(msg.sender).raiseAlert(user)`.
 
-| Position | Bytes/Length | Variable Type | Value                                                     |
-|----------|--------------|---------------|-----------------------------------------------------------|
-| 0x00     | 4            | bytes4        | function selector handleTransaction(address,bytes) -> 0x220ab6aa |
-| 0x04     | 32           | address       | user address                                              |
-| 0x24     | 32           | uint256       | offset of msgData                                         |
-| 0x44     | 32           | uint256       | length of msgData                                         |
-| 0x64     | 4            | bytes4        | function selector delegateTransfer(address,uint256,address) -> 0x9cd1a121 |
-| 0x68     | 32           | address       | to parameter address                                      |
-| 0x88     | 32           | uint256       | value parameter                                           |
-| 0xA8     | 32           | address       | origSender parameter address (*)                          |
+| Position | Position Range | Bytes/Length | Variable Type | Value                                                     |
+|----------|----------------|--------------|---------------|-----------------------------------------------------------|
+| 0x00     | 0x00-0x03      | 4            | bytes4        | function selector handleTransaction(address,bytes) -> 0x220ab6aa |
+| 0x04     | 0x04-0x23      | 32           | address       | user address                                              |
+| 0x24     | 0x24-0x43      | 32           | uint256       | offset of msgData                                         |
+| 0x44     | 0x44-0x63      | 32           | uint256       | length of msgData                                         |
+| 0x64     | 0x64-0x67      | 4            | bytes4        | function selector delegateTransfer(address,uint256,address) -> 0x9cd1a121 |
+| 0x68     | 0x68-0x87      | 32           | address       | to parameter address                                      |
+| 0x88     | 0x88-0xA7      | 32           | uint256       | value parameter                                           |
+| 0xA8     | 0xA8-0xC7      | 32           | address       | origSender parameter address (*)                          |
 
 ## Vulnerability
 

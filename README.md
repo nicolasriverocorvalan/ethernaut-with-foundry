@@ -11,4 +11,5 @@ Using Foundry to educate on engineering processes during smart contract deployme
 > Steps to exploit the vulnerability.
 >
 > ### Fix
-> How to fix the vulnerability to secure the smart contract.
+> How to fix the vulnerability to secure the smart contract. We will cover good coding practices, but that won't guarantee
+> secure code. A lot of these contracts will need a complete refactor to be consider secure.

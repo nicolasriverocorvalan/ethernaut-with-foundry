@@ -25,6 +25,37 @@ While the term `Double Entry Point` isn't standard in Ethereum or smart contract
    - `Proxy Contracts`: A `DEP` might use a proxy contract that forwards calls to the main token contract. The proxy can contain additional checks or logic to validate transactions before they reach the token contract.
    - `Detection Bots`: A system like `Forta` allows for the registration of detection bots. These bots can monitor transactions for suspicious activity and potentially halt or flag transactions before they are executed, acting as a `DEP` by providing an additional validation step.
 
+## calldataload(position)
+
+In Solidity, `calldataload` is a low-level assembly instruction used to read the input data of an external function call. This input data is referred to as `calldata` and is an immutable, byte-addressable array that contains the function identifier (the first 4 bytes that specify which function to call) and all the function arguments encoded.
+
+The `calldataload` instruction takes a single argument: the start position (in bytes) from where to read the data in the calldata. It reads 32 bytes of data starting from the specified position. This is particularly useful for accessing specific parts of the calldata in a gas-efficient manner, especially when dealing with complex data structures or when you need to bypass Solidity's higher-level abstractions for optimization purposes.
+
+When using the `delegateTransfer()` function, the `fortaNotify()` modifier captures `msg.data` and forwards it to `forta.notify()`. This process modifies `msg.data` for subsequent handling by our bot, specifically targeting the `handleTransaction(address, bytes calldata msgData)` function. The crucial part of `msg.data` we're interested in is the `origSender` parameter, located at the 0xA8 position in the calldata structure.
+
+The calldata layout for the `handleTransaction` function, as seen by our Detection Bot, is as follows:
+
+- Function selector for `handleTransaction(address,bytes)` at 0x00
+- User address at 0x04
+- Offset of `msgData` at 0x24
+- Length of `msgData` at 0x44
+- Function selector for `delegateTransfer(address,uint256,address)` within `msgData` at 0x64
+- `to` parameter address at 0x68
+- `value` parameter at 0x88
+- `origSender` parameter address at 0xA8, which is the target for extraction
+
+We must extract the `origSender` from the calldata using `calldataload(0xa8)` and compare it against the `cryptoVault` address. If they match, an alert is raised through `IForta(msg.sender).raiseAlert(user)`.
+
+| Position | Bytes/Length | Variable Type | Value                                                     |
+|----------|--------------|---------------|-----------------------------------------------------------|
+| 0x00     | 4            | bytes4        | function selector handleTransaction(address,bytes) -> 0x220ab6aa |
+| 0x04     | 32           | address       | user address                                              |
+| 0x24     | 32           | uint256       | offset of msgData                                         |
+| 0x44     | 32           | uint256       | length of msgData                                         |
+| 0x64     | 4            | bytes4        | function selector delegateTransfer(address,uint256,address) -> 0x9cd1a121 |
+| 0x68     | 32           | address       | to parameter address                                      |
+| 0x88     | 32           | uint256       | value parameter                                           |
+| 0xA8     | 32           | address       | origSender parameter address (*)                          |
 
 ## Vulnerability
 
@@ -119,7 +150,9 @@ Traces:
   [193286] RegisterBot::run()
     ├─ [0] VM::startBroadcast()
     │   └─ ← [Return] 
-    ├─ [100478] → new FortaBot@0x6108Bb9aB947A05C2b39926a1da9e4dAA8852A6d
+    ├─ [100478] → newTo fix the vulnerability in the `DoubleEntryPoint` contract, you can modify the `delegateTransfer` function to include a check for the `origSender` parameter. This will ensure that only the `CryptoVault` contract can invoke the function.ract can invoke the function.
+
+Here's the updated code:C2b39926a1da9e4dAA8852A6d
     │   └─ ← [Return] 390 bytes of code
     ├─ [2381] 0xd2ed0d4BcB72DaD1f452a1Fb865EE326c27AD865::forta() [staticcall]
     │   └─ ← [Return] 0xd947c7EA648780B416ebA96fCa13FB7D63aeDD30

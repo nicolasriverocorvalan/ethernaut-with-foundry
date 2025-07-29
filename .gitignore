@@ -1,2 +1,5 @@
 # Ignore lib
 */lib/
+
+# Ignore modules
+.gitmodules

@@ -1,7 +1,6 @@
-# Ignore lib
-*/lib/
-
 # Ignore modules
-.gitmodules
+*.gitmodules
 
+# Foundry
+lib/
 *foundry.lock

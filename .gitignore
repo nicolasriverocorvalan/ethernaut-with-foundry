@@ -3,3 +3,5 @@
 
 # Ignore modules
 .gitmodules
+
+*foundry.lock

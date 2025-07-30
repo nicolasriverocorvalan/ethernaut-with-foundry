@@ -1,0 +1,6 @@
+[submodule "25-Motorbike/lib/openzeppelin-contracts"]
+	path = 25-Motorbike/lib/openzeppelin-contracts
+	url = https://github.com/OpenZeppelin/openzeppelin-contracts
+[submodule "25-Motorbike/lib/openzeppelin-contracts-upgradeable"]
+	path = 25-Motorbike/lib/openzeppelin-contracts-upgradeable
+	url = https://github.com/OpenZeppelin/openzeppelin-contracts-upgradeable

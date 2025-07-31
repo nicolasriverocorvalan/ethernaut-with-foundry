@@ -6,7 +6,6 @@ interface IEngine {
     function upgradeToAndCall(address newImplementation, bytes calldata data) external;
 }
 
-
 contract MotorbikeAttack7702 {
     address engine;
     address motorbike;

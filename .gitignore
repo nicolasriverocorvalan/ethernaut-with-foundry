@@ -2,5 +2,5 @@
 *.gitmodules
 
 # Foundry
-lib/
+*lib/
 *foundry.lock
